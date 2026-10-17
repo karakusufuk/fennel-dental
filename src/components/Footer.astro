@@ -1,0 +1,50 @@
+---
+import Img from './Img.astro';
+---
+<footer class="foot on-dark" id="clinic" data-footer>
+  <div class="foot__in wrap">
+    <div class="foot__cols" data-reveal>
+      <Img base="klinik/bina" widths={[640, 1122]} sizes="(max-width: 900px) 100vw, 640px" width={1122} height={1402} class="foot__img" alt="The clinic: a Georgian townhouse with a cobalt blue front door and granite steps" />
+      <div class="foot__r">
+        <h2 class="h-bolum">Questions before you sit in the chair? Ask us.</h2>
+        <div class="foot__btns">
+          <a class="btn btn--beyaz" href="tel:+35315550182">Call 01 555 0182</a>
+          <a class="btn btn--hat" href="#whatsapp">WhatsApp</a>
+          <a class="btn btn--hat" href="mailto:hello@fennel.dental">hello@fennel.dental</a>
+        </div>
+        <div class="foot__grid">
+          <div>
+            <div class="etiket">Opening hours</div>
+            <div class="hours" data-hours>
+              <div data-days="1,2,3,4,5">Mon–Fri&nbsp;&nbsp;08:30–17:30</div>
+              <div data-days="6">Sat&nbsp;&nbsp;09:00–13:00</div>
+              <div class="sun" data-days="0">Sun&nbsp;&nbsp;Closed</div>
+            </div>
+          </div>
+          <div>
+            <div class="etiket">Address</div>
+            <p>[STREET], Dublin 4<br />Street parking, step-free entrance</p>
+            <a class="maps" href="#map">Open in Maps →</a>
+          </div>
+          <div>
+            <div class="etiket">Payment</div>
+            <p>Card, cash, bank transfer.<br />Monthly instalments on longer treatments.</p>
+          </div>
+          <div>
+            <div class="etiket">PRSI &amp; insurance</div>
+            <p>PRSI dental benefit accepted.<br />Receipts for health insurance claims.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span class="foot__logo">fennel<span>/</span>dental</span>
+      <span class="foot__links">
+        <a href="#fees">Fees</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#accessibility">Accessibility</a>
+        <a href="#cookies">Cookies</a>
+      </span>
+    </div>
+  </div>
+</footer>

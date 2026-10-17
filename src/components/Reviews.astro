@@ -1,0 +1,34 @@
+---
+import { reviews } from '../data/reviews';
+---
+<section class="sec wrap reviews" aria-label="Reviews" data-reviews>
+  <div data-reveal>
+    <div class="etiket reviews__top">[ Reviews ]</div>
+    <div class="reviews__row">
+      <div class="score">
+        <b>4.9</b>
+        <span>GOOGLE · [N] REVIEWS</span>
+      </div>
+      <figure class="rvfig">
+        <div class="rv-stack" aria-live="polite">
+          {reviews.map((r, i) => (
+            <div class={`rv${i === 0 ? ' is-on' : ''}`} data-rv={i} aria-hidden={i === 0 ? 'false' : 'true'}>
+              <div class="rv__tag">{r.tag}</div>
+              <blockquote>“{r.text}”</blockquote>
+            </div>
+          ))}
+        </div>
+        <figcaption class="rv-cap">
+          <span class="rv-who">
+            {reviews.map((r, i) => <span class={i === 0 ? 'is-on' : ''} data-who={i} aria-hidden={i === 0 ? 'false' : 'true'}>{r.who}</span>)}
+          </span>
+          <span class="rv-ctl">
+            <span class="rv-n" data-rv-n>1 / {reviews.length}</span>
+            <button type="button" class="arrow" aria-label="Previous review" data-prev>←</button>
+            <button type="button" class="arrow" aria-label="Next review" data-next>→</button>
+          </span>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>

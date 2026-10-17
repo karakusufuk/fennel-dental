@@ -1,0 +1,20 @@
+import { initSmoothScroll } from './smooth';
+import { initReveal } from './reveal';
+import { initHeader } from './header';
+import { initHero } from './hero';
+import { initTreatments } from './treatments';
+import { initGuided } from './guided';
+import { initTeam } from './team';
+import { initReviews } from './reviews';
+import { initHours, initMobileBar } from './footer';
+
+initSmoothScroll();
+initHeader();
+initHero();
+initTreatments();
+initGuided();
+initTeam();
+initReviews();
+initHours();
+initMobileBar();
+initReveal();

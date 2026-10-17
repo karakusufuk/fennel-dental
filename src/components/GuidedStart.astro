@@ -1,0 +1,54 @@
+---
+import { branches, defaultBranch, defaultAnswer } from '../data/branches';
+const start = branches.find((b) => b.key === defaultBranch)!;
+---
+<section class="sec wrap" id="start" aria-label="Guided start" data-guided data-default-branch={defaultBranch} data-default-answer={defaultAnswer}>
+  <div class="guided" data-reveal>
+    <div class="etiket">[ Guided start ]</div>
+    <h2 class="h-bolum">What brings you in?</h2>
+    <div class="opts" role="group" aria-label="Reason for visit">
+      {branches.map((b) => (
+        <button type="button" class="opt" data-branch={b.key} aria-pressed={b.key === defaultBranch ? 'true' : 'false'}>{b.label}</button>
+      ))}
+    </div>
+    <div class="prog">
+      <div class="prog__bar"><i style="width:50%"></i></div>
+      <span class="prog__n">2 / 4</span>
+    </div>
+
+    {branches.map((b) => (
+      <div class="gq" data-q={b.key} hidden={b.key !== defaultBranch}>
+        <h3 id={`q-${b.key}`}>{b.q}</h3>
+      </div>
+    ))}
+    <div class="answers" role="group" aria-labelledby="q-braces" data-answers>
+      <button type="button" class="ans" data-ans="0" aria-pressed={defaultAnswer === 0 ? 'true' : 'false'}>{start.answers[0]}</button>
+      <button type="button" class="ans" data-ans="1" aria-pressed={defaultAnswer === 1 ? 'true' : 'false'}>{start.answers[1]}</button>
+    </div>
+
+    <div class="gdyn" data-dyn aria-live="polite">
+      <div class="gcard gcard--call on-dark" data-call hidden>
+        <div class="etiket">Don't wait for a slot</div>
+        <div class="gcard__t">Call us now. Swelling or fever needs to be seen today.</div>
+        <a class="btn btn--beyaz" style="align-self:flex-start" href="tel:+35315550182">Call 01 555 0182 →</a>
+      </div>
+      {branches.map((b) => (
+        <div class="gcard on-dark" data-result={b.key} hidden={b.key !== defaultBranch}>
+          <div class="gcard__top">
+            <div class="gcard__t">{b.title}</div>
+            <div class="gcard__time">{b.time}</div>
+          </div>
+          <div class="grows">
+            {b.rows.map(([l, v]) => <div><span>{l}</span><span class="v">{v}</span></div>)}
+          </div>
+          <p class="gcard__fixed">Exact price comes as a written treatment plan after your consultation.</p>
+          <div class="gcard__act">
+            <a class="btn btn--beyaz" href="#book">{b.cta}</a>
+            <a class="plain" href="#fees">Full fee list</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+  <script type="application/json" data-branches set:html={JSON.stringify(branches.map((b) => ({ key: b.key, q: b.q, answers: b.answers })))}></script>
+</section>

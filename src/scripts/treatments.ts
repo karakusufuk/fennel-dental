@@ -1,0 +1,77 @@
+import { $, $$ } from './util';
+
+export function initTreatments() {
+  const sec = $('[data-treat]');
+  if (!sec) return;
+  const treat = $('.treat', sec)!;
+  const items = $$('.tlist > li', sec);
+  const btns = items.map((li) => $<HTMLButtonElement>('.tbtn', li)!);
+  const dets = items.map((li) => $('.tdet', li)!);
+  const slots = items.map((li) => $('[data-slot]', li)!);
+  const panel = $('[data-panel]', sec)!;
+  const stage = $('[data-stage]', sec)!;
+  const pairs = $$('[data-pair]', sec);
+  const prog = $('[data-prog]', sec)!;
+  const progN = $('[data-prog-n]', sec)!;
+  const total = items.length;
+  const narrow = matchMedia('(max-width: 900px)');
+  let cur = 0;
+
+  // Geçiş: 360ms bekleme + 3 sn feather silme + %4 büyüme / 12px yukarı (CSS keyframes)
+  const play = () => {
+    stage.classList.remove('is-playing');
+    void stage.offsetWidth; // animasyonu baştan başlat (art arda tıklamada da güvenli)
+    stage.classList.add('is-playing');
+  };
+
+  // Dar ekranda panel, aktif satırın açıklamasının altına taşınır
+  const place = () => {
+    if (narrow.matches) {
+      slots[cur].appendChild(panel);
+      panel.classList.add('panel--moved');
+    } else {
+      treat.appendChild(panel);
+      panel.classList.remove('panel--moved');
+    }
+  };
+
+  const select = (i: number) => {
+    cur = i;
+    btns.forEach((b, k) => {
+      const on = k === i;
+      b.setAttribute('aria-pressed', String(on));
+      b.setAttribute('aria-expanded', String(on));
+      dets[k].classList.toggle('is-open', on);
+    });
+    pairs.forEach((p, k) => p.classList.toggle('is-on', k === i));
+    prog.style.width = `${((i + 1) / total) * 100}%`;
+    progN.textContent = `${i + 1} / ${total}`;
+    place();
+    play();
+  };
+
+  btns.forEach((b, i) => b.addEventListener('click', () => select(i)));
+  $('[data-replay]', sec)!.addEventListener('click', play);
+  narrow.addEventListener('change', () => { place(); play(); });
+  place();
+
+  // Görselleri bölüme yaklaşınca yükle (lazy → eager), geçişte boş kare olmasın
+  if ('IntersectionObserver' in window) {
+    const near = new IntersectionObserver((es) => {
+      if (!es[0].isIntersecting) return;
+      near.disconnect();
+      $$<HTMLImageElement>('img[loading="lazy"]', stage).forEach((img) => { img.loading = 'eager'; });
+    }, { rootMargin: '900px 0px' });
+    near.observe(sec);
+
+    // İlk görünüşte 01 geçişi bir kez kendiliğinden oynar
+    const seen = new IntersectionObserver((es) => {
+      if (!es[0].isIntersecting) return;
+      seen.disconnect();
+      play();
+    }, { threshold: 0.35 });
+    seen.observe(panel);
+  } else {
+    play();
+  }
+}

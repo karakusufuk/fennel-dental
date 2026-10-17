@@ -1,0 +1,23 @@
+---
+// public/img/<base>-<w>.avif|webp → <picture> (AVIF + WebP yedek, srcset)
+interface Props {
+  base: string;
+  widths: number[];
+  sizes: string;
+  width: number;
+  height: number;
+  alt?: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  ariaHidden?: boolean;
+}
+const { base, widths, sizes, width, height, alt = '', class: cls, loading = 'lazy', fetchpriority, ariaHidden } = Astro.props;
+const set = (ext: string) => widths.map((w) => `/img/${base}-${w}.${ext} ${w}w`).join(', ');
+const fallback = `/img/${base}-${widths[widths.length - 1]}.webp`;
+---
+<picture>
+  <source type="image/avif" srcset={set('avif')} sizes={sizes} />
+  <source type="image/webp" srcset={set('webp')} sizes={sizes} />
+  <img src={fallback} alt={alt} width={width} height={height} class={cls} loading={loading} decoding={loading === 'eager' ? 'sync' : 'async'} fetchpriority={fetchpriority} aria-hidden={ariaHidden ? 'true' : undefined} />
+</picture>

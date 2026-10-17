@@ -1,0 +1,31 @@
+---
+import Img from './Img.astro';
+import { team } from '../data/team';
+---
+<section class="sec wrap" id="team" aria-label="Team" data-team>
+  <div class="team" data-reveal>
+    <div class="team__main">
+      <div class="etiket">[ Team ]</div>
+      <h2 class="h-bolum">Who you'll see.</h2>
+      <div class="team__rows" data-rows>
+        {team.map((d, i) => (
+          <a href="#doctor" class="trow" data-i={i}>
+            <Img base={`ekip/${d.img}`} widths={[320, 640]} sizes="56px" width={640} height={800} alt={d.alt} class="d-thumb" />
+            <span class="d-name">{d.name}</span>
+            <span class="d-role">{d.role}</span>
+            <span class="d-lang">{d.langs}</span>
+            <span class="d-dcr">DCR [NO]</span>
+            <span class="d-earl">Earliest {d.earliest}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+    <div class="team__side" aria-hidden="true" data-side>
+      <div class="portrait" data-portrait>
+        {team.map((d, i) => (
+          <Img base={`ekip/${d.img}`} widths={[320, 640]} sizes="300px" width={640} height={800} alt="" class={i === 0 ? 'is-on' : ''} loading="lazy" />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

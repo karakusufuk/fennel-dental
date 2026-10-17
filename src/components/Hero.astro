@@ -1,0 +1,24 @@
+---
+import Img from './Img.astro';
+---
+<section class="hero" id="top" aria-label="Intro" data-hero>
+  <Img base="hero/hero-arka" widths={[768, 1536]} sizes="100vw" width={1536} height={1024} class="hero__back" loading="eager" fetchpriority="high" ariaHidden />
+  <div class="hero__head wrap">
+    <h1>Know the plan before the chair.</h1>
+  </div>
+  <Img base="hero/hero-on" widths={[768, 1152, 1536]} sizes="(max-width: 760px) 100vw, 1140px" width={1536} height={1024} class="hero__front" alt="A dentist shows a seated patient his X-ray on a tablet" loading="eager" fetchpriority="high" />
+  <div class="hero__low">
+    <div class="wrap">
+      <p class="hero__p">Answer four questions. See your treatment, its time and its price range. Then pick a slot.</p>
+      <div class="hero__btns">
+        <a class="btn btn--kobalt" href="#start">Start in 60 seconds →</a>
+        <a class="btn btn--yuzey" href="#book">Book directly</a>
+      </div>
+      <div class="strip" aria-label="Today's availability">
+        <span>TODAY</span>
+        <span><span data-live="free">3</span> free</span>
+        <span><span data-live="earliest">14:30</span> earliest</span>
+      </div>
+    </div>
+  </div>
+</section>

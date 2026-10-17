@@ -1,0 +1,47 @@
+/* Fennel Dental — tasarım değişkenleri. Değerler değişmez. */
+/* Fontlar self-host: src/styles/fonts.css (Google Fonts yok — GDPR + performans). */
+
+:root {
+  /* Renk */
+  --zemin: #F3F4F2;
+  --yuzey: #FFFFFF;
+  --murekkep: #0F1A24;
+  --ikincil: #586470;      /* ikincil metin — 4.5:1 sağlar */
+  --pasif: #5E6973;        /* sahnede seçili olmayan tedavi adı */
+  --cizgi: #D5D9DC;
+  --kobalt: #1F48C9;       /* SADECE: randevu aksiyonları, seçili durum, ilerleme */
+  --sahne: #EAEDEF;        /* tedavi görsellerinin zemini, birebir */
+  --koyu: #0F1A24;         /* sonuç kartı ve footer */
+  --koyu-cizgi: #33414E;
+  --koyu-ikincil: #9AA6B0;
+  --koyu-metin: #D5DBE0;
+  --portre-zemin: #DCE1E4;
+
+  /* Font */
+  --f-baslik: 'Bricolage Grotesque', sans-serif;
+  --f-govde: 'Geist', sans-serif;
+  --f-mono: 'Geist Mono', monospace;
+
+  /* Tipografi ölçüleri */
+  --hero-boyut: clamp(56px, 9.7vw, 140px);  /* satır 0.9, harf -0.05em, 600 */
+  --bolum-boyut: clamp(40px, 5vw, 72px);    /* satır 0.98, harf -0.04em, 600 */
+  --kart-boyut: 30px;                       /* 28–34 arası; satır 1.1, harf -0.03em */
+  --govde-boyut: 17px;                      /* satır 1.6, harf -0.005em */
+  --mono-boyut: 14px;                       /* 13–15 arası; satır 1.4 */
+  --etiket-boyut: 12px;                     /* mono, BÜYÜK HARF, harf +0.08em */
+
+  /* Düzen */
+  --kose: 10px;
+  --max: 1320px;
+  --kenar: 24px;
+  --kolon-arasi: 24px;
+  --bolum-arasi: 120px;   /* mobil 72px */
+
+  /* Hareket */
+  --ease-giris: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-silme: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 760px) {
+  :root { --bolum-arasi: 72px; }
+}

@@ -1,0 +1,27 @@
+---
+const links = [
+  ['Treatments', '#treatments'],
+  ['Team', '#team'],
+  ['Fees', '#fees'],
+  ['Clinic', '#clinic'],
+];
+---
+<header class="hdr" data-hdr>
+  <div class="hdr__in wrap">
+    <a class="logo" href="#top">fennel<span>/</span>dental</a>
+    <nav class="nav" aria-label="Main">
+      {links.map(([t, h]) => <a href={h}>{t}</a>)}
+    </nav>
+    <div class="hdr__r">
+      <a class="tel" href="tel:+35315550182">01 555 0182</a>
+      <a class="btn btn--kobalt btn--sm" href="#book">Book a visit →</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" data-menu-btn>Menu</button>
+    </div>
+  </div>
+  <div class="menu" id="menu-panel" data-menu hidden>
+    <nav class="menu__list" aria-label="Menu">
+      {links.map(([t, h]) => <a class="menu__l" href={h}>{t}</a>)}
+    </nav>
+    <a class="tel" href="tel:+35315550182">01 555 0182</a>
+  </div>
+</header>

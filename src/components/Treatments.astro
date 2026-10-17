@@ -1,0 +1,59 @@
+---
+import Img from './Img.astro';
+import { treatments } from '../data/treatments';
+---
+<section class="sec wrap" id="treatments" aria-label="Treatments" data-treat>
+  <div class="treat" data-reveal>
+    <div class="treat__list">
+      <div class="etiket">[ Treatments ]</div>
+      <h2 class="h-bolum">What actually happens.</h2>
+      <ol class="tlist">
+        {treatments.map((t, i) => (
+          <li data-t={i}>
+            <button type="button" class="tbtn" aria-pressed={i === 0 ? 'true' : 'false'} aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`tdet-${i}`}>
+              <span class="tnum">{t.n}</span>
+              <span class="tname">{t.name}</span>
+            </button>
+            <div class={`tdet${i === 0 ? ' is-open' : ''}`} id={`tdet-${i}`}>
+              <div class="tdet__in">
+                <div class="tdet__body">
+                  <p>{t.desc}</p>
+                  <dl class="tinfo">
+                    <div><dt>Length</dt><dd>{t.length}</dd></div>
+                    <div><dt>Visits</dt><dd>{t.visits}</dd></div>
+                    <div><dt>Feels like</dt><dd class="sans">{t.feels}</dd></div>
+                    <div><dt>Fee</dt><dd>€[MIN]–€[MAX]</dd></div>
+                  </dl>
+                  <div class="tlinks">
+                    <a href="#details">Details →</a>
+                    <a class="k" href="#book">Book this consultation →</a>
+                  </div>
+                </div>
+                <div class="tslot" data-slot></div>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="panel" data-panel>
+      <div class="panel__lbl etiket"><span>Before</span><span>After</span></div>
+      <div class="stage" data-stage>
+        {treatments.map((t, i) => (
+          <div class={`pair${i === 0 ? ' is-on' : ''}${t.fade ? ' pair--fade' : ''}`} data-pair={i}>
+            <Img base={`tedavi/${t.img}-once`} widths={[480, 768]} sizes="(max-width: 900px) 100vw, 470px" width={768} height={1024} alt={t.altBefore} loading="lazy" />
+            <Img base={`tedavi/${t.img}-sonra`} widths={[480, 768]} sizes="(max-width: 900px) 100vw, 470px" width={768} height={1024} alt={t.altAfter} class="after" loading="lazy" />
+          </div>
+        ))}
+      </div>
+      <div class="panel__ctl">
+        <button type="button" class="replay" data-replay>↻ Play again</button>
+        <div class="prog">
+          <div class="prog__bar"><i data-prog style="width:20%"></i></div>
+          <span class="prog__n" data-prog-n>1 / 5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
