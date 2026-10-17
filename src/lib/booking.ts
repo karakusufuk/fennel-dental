@@ -261,9 +261,9 @@ export function dentistRange(date: string, dentist: string): [number, number] | 
 
 export interface DaySlots { date: string; open: boolean; slots: { time: string; dentists: string[] }[] }
 
-export function availabilitySync(opts: { treatment: string; dentist: string; from: string; days: number }): DaySlots[] {
+export function availabilitySync(opts: { treatment: string; dentist: string; from: string; days: number; duration?: number; exceptId?: string }): DaySlots[] {
   const st = getSettings();
-  const dur = st.treatments[opts.treatment]?.duration ?? 30;
+  const dur = opts.duration ?? st.treatments[opts.treatment]?.duration ?? 30;
   const cands = opts.dentist === 'any'
     ? team.filter((d) => st.dentists[d.slug].treatments.includes(opts.treatment)).map((d) => d.slug)
     : [opts.dentist];
@@ -278,8 +278,8 @@ export function availabilitySync(opts: { treatment: string; dentist: string; fro
         if (!rg) continue;
         for (let m = rg[0]; m + dur <= rg[1]; m += 15) {
           if (date === t && m <= nowMin()) continue;
-          if (!isDentistFree(date, m, dur, dn)) continue;
-          if (freeChair(date, m, dur) === null) continue;
+          if (!isDentistFree(date, m, dur, dn, opts.exceptId)) continue;
+          if (freeChair(date, m, dur, opts.exceptId) === null) continue;
           const k = fromMin(m);
           map.set(k, [...(map.get(k) ?? []), dn]);
         }
@@ -315,20 +315,20 @@ export function dentistsSync(treatment?: string) {
   const st = getSettings();
   return team.filter((d) => !treatment || st.dentists[d.slug].treatments.includes(treatment));
 }
-export async function getAvailability(opts: { treatment: string; dentist: string; from: string; days: number }) {
+export async function getAvailability(opts: { treatment: string; dentist: string; from: string; days: number; duration?: number; exceptId?: string }) {
   await wait();
   return availabilitySync(opts);
 }
 /** Ağ gecikmesi olmadan: sayfa içi küçük okumalar (ör. hekim profili "Next free slots"). */
-export function nextSlots(dentist: string, treatment = 'examination', n = 3) {
+export function nextSlots(dentist: string, treatment = 'examination', n = 3, duration?: number) {
   const out: { date: string; time: string }[] = [];
-  for (const d of availabilitySync({ treatment, dentist, from: today(), days: 14 })) {
+  for (const d of availabilitySync({ treatment, dentist, from: today(), days: 14, duration })) {
     for (const s of d.slots) { out.push({ date: d.date, time: s.time }); if (out.length >= n) return out; }
   }
   return out;
 }
-export function earliest(dentist: string, treatment: string) {
-  return nextSlots(dentist, treatment, 1)[0] ?? null;
+export function earliest(dentist: string, treatment: string, duration?: number) {
+  return nextSlots(dentist, treatment, 1, duration)[0] ?? null;
 }
 
 const codes: Record<string, string> = {};

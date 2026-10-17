@@ -1,6 +1,15 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
 ---
-<Page title="My appointments" description="Manage your appointments.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ MY APPOINTMENTS ]</div><h1 class="h-bolum">My appointments</h1></div></section>
+<Page title="My appointments" description="See, move or cancel your appointments." demo>
+  <section class="sec wrap" aria-label="My appointments">
+    <PageHead label="MY APPOINTMENTS" title="Your appointments." />
+    <div class="myapp" data-my style="margin-top:40px">
+      <noscript><p>This page needs JavaScript. Please call 01 555 0182.</p></noscript>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/my';
+  </script>
 </Page>

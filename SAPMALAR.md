@@ -27,3 +27,15 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - **Onay kutusu köşesi 4px** (20px kutuda 10px daire olurdu).
 - **Çocuk ortodonti sonucunda ikinci satır** "Clear aligners, if advised" / "Fixed braces, if advised" (belge: discreet/fine cevabı satır 2'yi değiştirir).
 - **Geri tuşu:** her ileri adım `pushState`; `← Back` da yeni kayıt ekler (tarayıcı geri tuşu bir önceki adıma döner).
+
+## Aşama 4
+- **`?treatment=` ile gelindiğinde 1. adım atlanır** (2. adımdan başlar); adım göstergesinden geri dönülebilir. `?dentist=` ile birlikte gelirse 3. adımdan başlar. Belge yalnız /start/ için atlamayı söylüyor; ana sayfa/profil linkleri de aynı mantıkla.
+- **Seçenek tıklayınca otomatik ilerleme** 1. ve 2. adımda; ayrıca klavye için `Continue →` düğmesi var. "Not sure — book an examination" varsayılan seçili gelir.
+- **Gün şeridi:** masaüstünde 7'şerli sayfalar + ok düğmeleri, mobilde 14 gün yatay kayar. Dolu/kapalı günler pasif.
+- **Telefon doğrulama:** 8–10 haneli (başındaki +353/0 atılır). Kod, telefondan türetilen 6 haneli demo kodu; /book/ ve /my-appointments/ sayfaları arasında değişmez.
+- **Kod hatası ve "kod hiç gönderilmedi" durumu** aynı metni gösterir (*That code doesn't match…*). Belge ayrı metin vermiyor.
+- **Yer doldurma hatası:** seçilen saat başkası tarafından alındıysa *That time was just taken. Pick another.* ve 3. adıma dönüş.
+- **Mobil özet çubuğu 1100px altında** (belge "mobil" diyor; tablet de aynı). `.mbar` bu sayfada gizlenir, yerine özet satırı gelir.
+- **Erteleme:** `/book/?reschedule=<id>` yalnız 3. adımı gösterir, `Save new time →` ile kaydeder; eski saat serbest kalır; onay ekranı `[ MOVED ]`.
+- **Bekleme listesi:** /my-appointments/ katılımı adı olmadan `Patient` olarak ekler (hesap yok, ad sorulmuyor).
+- **İptal edilen satır:** gri ve üstü çizili + `CANCELLED`.
