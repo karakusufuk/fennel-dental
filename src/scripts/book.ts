@@ -40,6 +40,7 @@ const S: State = {
   sent: false, resendAt: 0, resent: false, days: null, page: 0, start: null, resched: null, errors: {}, done: null, busy: false, sumOpen: false,
 };
 let skipTo: 1 | 2 | 3 | 4 = 1;
+let preset: { dentist: string; date: string; time: string } | null = null;
 
 /* ───────── Başlangıç: URL ve /start/ sonucu ───────── */
 (function boot() {
@@ -60,6 +61,9 @@ let skipTo: 1 | 2 | 3 | 4 = 1;
   }
   if (t && known.has(t) && !S.start) { S.treatment = t; skipTo = 2; }
   if (d && team.some((x) => x.slug === d)) { S.dentist = d; if (skipTo === 2) skipTo = 3; }
+  const pd = params.get('date'), pt = params.get('time');
+  if (d && pd && pt && /^\d{4}-\d{2}-\d{2}$/.test(pd) && /^\d{2}:\d{2}$/.test(pt)) { preset = { dentist: d, date: pd, time: pt }; S.date = pd; S.time = pt; }
+  if (params.get('note') === '1') { noteState.open = true; skipTo = 3; }
   if (r) {
     const b = getBooking(r);
     if (b && b.status !== 'cancelled') {
@@ -280,6 +284,7 @@ async function loadDays() {
     if (d) { S.date = d.date; S.time = d.slots[0].time; S.page = days.indexOf(d) >= 7 ? 1 : 0; }
   }
   if (S.date && !days.find((d) => d.date === S.date)?.slots.some((s) => s.time === S.time)) S.time = '';
+  if (S.date) S.page = days.findIndex((d) => d.date === S.date) >= 7 ? 1 : 0;
   render(S.step === 3 && false);
   const h = q('#step-h');
   if (h && document.activeElement === document.body) h.focus({ preventScroll: true });
@@ -294,8 +299,10 @@ root.addEventListener('click', async (e) => {
   if (tr) {
     S.treatment = tr.dataset.treatment!;
     S.duration = S.start && S.start.treatment === S.treatment ? S.start.duration : undefined;
-    S.dentist = 'any'; S.date = ''; S.time = '';
-    setStep(2); return;
+    // hekim profilinden gelindiyse hekim ve saat korunur (hekim bu tedaviyi yapıyorsa)
+    const keep = !!preset && dentistsSync(S.treatment).some((x) => x.slug === preset!.dentist);
+    S.dentist = keep ? preset!.dentist : 'any'; S.date = keep ? preset!.date : ''; S.time = keep ? preset!.time : '';
+    setStep(keep ? 3 : 2); return;
   }
   const de = t.closest<HTMLElement>('[data-dentist]');
   if (de) { S.dentist = de.dataset.dentist!; S.date = ''; S.time = ''; setStep(3); return; }

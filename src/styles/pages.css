@@ -381,3 +381,16 @@ body.has-sumbar .mbar { display: none; }
 
 .resend { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .linkbtn2:disabled { opacity: 0.5; cursor: default; }
+
+/* Alt sayfalarda son içerik ile footer arası: masaüstü 120px, mobil 72px (tokens --bolum-arasi) */
+.page { padding-bottom: var(--bolum-arasi); }
+.foot--min .foot__in { padding-top: 32px; padding-bottom: 32px; gap: 0; }
+.foot--min .foot__bar { border-top: 0; padding-top: 0; }
+
+.slot-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--kobalt); font-size: 15px; text-decoration: none; }
+.slot-link:hover { color: var(--murekkep); text-decoration: underline; }
+.slots a.link-k { display: inline-flex; align-items: center; min-height: 44px; }
+@media (min-width: 901px) {
+  /* hekim portresi masaüstünde takılır; header (60) + 24px, ekrana sığar */
+  .profile__img { position: sticky; top: 84px; width: min(100%, calc((100vh - 108px) * 0.8)); }
+}

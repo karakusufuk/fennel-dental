@@ -1,6 +1,22 @@
 ---
 import Img from './Img.astro';
+interface Props { minimal?: boolean }
+const { minimal = false } = Astro.props;
 ---
+{minimal ? (
+<footer class="foot foot--min on-dark" data-footer>
+  <div class="foot__in wrap">
+    <div class="foot__bar">
+      <span>© Fennel Dental</span>
+      <span class="foot__links">
+        <a href="/privacy/">Privacy</a>
+        <a href="/cookies/">Cookies</a>
+        <a href="/accessibility/">Accessibility</a>
+      </span>
+    </div>
+  </div>
+</footer>
+) : (
 <footer class="foot on-dark" id="clinic" data-footer>
   <div class="foot__in wrap">
     <div class="foot__cols" data-reveal>
@@ -50,3 +66,4 @@ import Img from './Img.astro';
     </div>
   </div>
 </footer>
+)}
