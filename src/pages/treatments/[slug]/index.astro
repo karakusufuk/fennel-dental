@@ -4,6 +4,7 @@ import PageHead from '../../../components/PageHead.astro';
 import Stage from '../../../components/Stage.astro';
 import Team from '../../../components/Team.astro';
 import { treatmentPages, emergencyRow, SAME_PRICE } from '../../../data/content';
+import { treatmentFee } from '../../../data/prices';
 
 export function getStaticPaths() {
   return treatmentPages.map((t) => ({ params: { slug: t.slug }, props: { t } }));
@@ -23,7 +24,7 @@ const next = ring[(i + 1) % ring.length];
           <div><dt>Length</dt><dd>{t.length}</dd></div>
           <div><dt>Visits</dt><dd>{t.visits}</dd></div>
           <div><dt>Feels like</dt><dd class="sans">{t.feels}</dd></div>
-          <div><dt>Fee</dt><dd data-fee={t.slug}>€[MIN]–€[MAX]</dd></div>
+          <div><dt>Fee</dt><dd data-fee={t.slug}>{treatmentFee(t.slug)}</dd></div>
         </dl>
         <div class="btnrow">
           <a class="btn btn--kobalt" href={`/book/?treatment=${t.slug}`}>Book this consultation →</a>
@@ -69,7 +70,7 @@ const next = ring[(i + 1) % ring.length];
       <div class="etiket">[ FEE ]</div>
       <div class="feeline">
         <span class="feeline__name">{t.name}</span>
-        <span class="feeline__v" data-fee={t.slug}>€[MIN]–€[MAX]</span>
+        <span class="feeline__v" data-fee={t.slug}>{treatmentFee(t.slug)}</span>
       </div>
       <p class="fixed-line">{SAME_PRICE}</p>
       <a class="link-k back-link" href="/fees/">Full fee list →</a>

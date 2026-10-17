@@ -7,6 +7,7 @@
  * - Senkron `admin` nesnesi: panelin kullandığı okuma/yazma işlemleri
  */
 import { team } from '../data/team';
+import { TREATMENT_PRICE, eur } from '../data/prices';
 
 export type Status = 'confirmed' | 'requested' | 'cancelled' | 'arrived' | 'no-show';
 export type Mode = 'instant' | 'request';
@@ -76,17 +77,13 @@ export const TREATMENT_NAMES: Record<string, string> = {
 };
 export const TREATMENT_ORDER = ['check-up-and-clean', 'fillings', 'root-canal', 'implants', 'braces-and-aligners', 'whitening', 'crowns-and-veneers', 'emergency'];
 
-const DEFAULT_TREATMENTS: Settings['treatments'] = {
-  examination: { duration: 30, mode: 'instant', min: '€[FEE]', max: '€[FEE]' },
-  'check-up-and-clean': { duration: 45, mode: 'instant', min: '€[MIN]', max: '€[MAX]' },
-  fillings: { duration: 45, mode: 'instant', min: '€[MIN]', max: '€[MAX]' },
-  'root-canal': { duration: 75, mode: 'instant', min: '€[MIN]', max: '€[MAX]' },
-  implants: { duration: 45, mode: 'request', min: '€[MIN]', max: '€[MAX]' },
-  'braces-and-aligners': { duration: 45, mode: 'request', min: '€[MIN]', max: '€[MAX]' },
-  whitening: { duration: 30, mode: 'instant', min: '€[MIN]', max: '€[MAX]' },
-  'crowns-and-veneers': { duration: 30, mode: 'request', min: '€[MIN]', max: '€[MAX]' },
-  emergency: { duration: 30, mode: 'instant', min: '€[FEE]', max: '€[FEE]' },
+const DUR: Record<string, [number, Mode]> = {
+  examination: [30, 'instant'], 'check-up-and-clean': [45, 'instant'], fillings: [45, 'instant'], 'root-canal': [75, 'instant'],
+  implants: [45, 'request'], 'braces-and-aligners': [45, 'request'], whitening: [30, 'instant'], 'crowns-and-veneers': [30, 'request'], emergency: [30, 'instant'],
 };
+export const DEFAULT_TREATMENTS: Settings['treatments'] = Object.fromEntries(
+  Object.entries(DUR).map(([k, [duration, mode]]) => [k, { duration, mode, min: eur(TREATMENT_PRICE[k][0]), max: eur(TREATMENT_PRICE[k][1]) }]),
+);
 
 const DENTIST_TREATMENTS: Record<string, string[]> = {
   'aoife-murphy': ['examination', 'check-up-and-clean', 'fillings', 'root-canal', 'emergency'],
@@ -152,7 +149,14 @@ function rng(seed: string) {
 }
 
 /* ───────── Ayarlar, kayıtlar, günlük ───────── */
-export function getSettings(): Settings { return load(KEYS.settings, defaultSettings); }
+export function getSettings(): Settings {
+  const st = load(KEYS.settings, defaultSettings);
+  // eski demo verisindeki [MIN]/[MAX]/[FEE] yer tutucuları gerçek fiyata çevrilir
+  for (const [k, t] of Object.entries(st.treatments)) {
+    if (/\[/.test(t.min) || /\[/.test(t.max)) { t.min = DEFAULT_TREATMENTS[k].min; t.max = DEFAULT_TREATMENTS[k].max; }
+  }
+  return st;
+}
 export function saveSettings(s: Settings) { save(KEYS.settings, s); logEvent('Settings saved'); }
 const FIRST = ['Niamh', 'Cian', 'Aoibhinn', 'Sean', 'Roisin', 'Eoin', 'Grainne', 'Darragh', 'Ciara', 'Padraig', 'Saoirse', 'Fionn', 'Maeve', 'Oisin', 'Aisling', 'Tadhg'];
 const LAST = ['Doyle', 'Kelly', 'Brennan', 'Quinn', 'Nolan', 'Gallagher', 'Burke', 'Daly', 'Kavanagh', 'Fitzgerald', 'Moran', 'Hickey'];

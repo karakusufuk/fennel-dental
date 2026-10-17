@@ -95,16 +95,6 @@ export const treatmentPages: TreatmentPage[] = [
 // /treatments/ listesinde 8. satır
 export const emergencyRow = { n: '08', name: 'Emergency care', href: '/emergency/', length: '30 min' };
 
-export interface FeeRow { name: string; fee?: boolean; slug?: string }
-export const feeGroups: { title: string; rows: FeeRow[] }[] = [
-  { title: 'Consultations', rows: [{ name: 'Examination', fee: true }, { name: 'New patient examination', fee: true }, { name: 'Emergency appointment', fee: true }, { name: 'Orthodontic consultation', fee: true }, { name: 'Implant consultation', fee: true }, { name: 'Cosmetic consultation', fee: true }] },
-  { title: 'General', rows: [{ name: 'Check-up and clean', slug: 'check-up-and-clean' }, { name: 'Hygiene appointment', fee: true }, { name: 'X-ray (small)', fee: true }, { name: 'X-ray (panoramic)', fee: true }, { name: 'Filling (tooth-coloured)', slug: 'fillings' }] },
-  { title: 'Root canal', rows: [{ name: 'Front tooth' }, { name: 'Premolar' }, { name: 'Molar', slug: 'root-canal' }] },
-  { title: 'Implants', rows: [{ name: 'Single implant with crown', slug: 'implants' }, { name: '3D scan', fee: true }] },
-  { title: 'Orthodontics', rows: [{ name: 'Clear aligners', slug: 'braces-and-aligners' }, { name: 'Fixed braces' }] },
-  { title: 'Cosmetic', rows: [{ name: 'Whitening (home kit)', slug: 'whitening' }, { name: 'Whitening (in clinic)' }, { name: 'Veneer (per tooth)', slug: 'crowns-and-veneers' }, { name: 'Crown (per tooth)' }] },
-];
-
 export const emergencySituations = [
   { t: 'Severe toothache', d: 'Take the painkiller you normally use, following the label. Don\'t put aspirin on the gum. Call us for a same-day slot.' },
   { t: 'Knocked-out adult tooth', d: 'Hold it by the crown, not the root. If it\'s dirty, rinse briefly in milk. Keep it in milk and come in straight away — the first hour matters most.' },

@@ -3,9 +3,10 @@ import Page from '../../layouts/Page.astro';
 import PageHead from '../../components/PageHead.astro';
 import DarkCard from '../../components/DarkCard.astro';
 import { treatmentPages, emergencyRow } from '../../data/content';
+import { treatmentFee } from '../../data/prices';
 const rows = [
-  ...treatmentPages.map((t) => ({ n: t.n, name: t.name, href: `/treatments/${t.slug}/`, length: t.length, fee: '€[MIN]–€[MAX]' })),
-  { n: emergencyRow.n, name: emergencyRow.name, href: emergencyRow.href, length: emergencyRow.length, fee: '€[FEE]' },
+  ...treatmentPages.map((t) => ({ n: t.n, name: t.name, href: `/treatments/${t.slug}/`, length: t.length, fee: treatmentFee(t.slug) })),
+  { n: emergencyRow.n, name: emergencyRow.name, href: emergencyRow.href, length: emergencyRow.length, fee: treatmentFee('emergency') },
 ];
 ---
 <Page title="Treatments" description="Every treatment we offer, how long it takes and its price range.">

@@ -3,8 +3,13 @@ export interface Opt { v: string; label: string }
 export interface Q { id: string; text: string; opts: Opt[] }
 export type Answers = Record<string, string>;
 const YN = (): Opt[] => [{ v: 'yes', label: 'Yes' }, { v: 'no', label: 'No' }];
-const RANGE = '€[MIN]–€[MAX]';
-const FEE = '€[FEE]';
+import { range as R, eur } from '../data/prices';
+// Fiyatlar tek kaynaktan (src/data/prices.ts, /fees/ ile aynı rakamlar)
+const EXAM = eur(65);
+const ORTHO = eur(80);
+const ALIGN = R(3200, 5200);
+const BRACES = R(3600, 6500);
+const IMPLANT = R(2400, 3400);
 
 export const Q_: Record<string, Q> = {
   reason: { id: 'reason', text: 'What brings you in?', opts: [{ v: 'pain', label: 'Pain' }, { v: 'appearance', label: 'Appearance' }, { v: 'braces', label: 'Braces' }, { v: 'missing', label: 'Missing tooth' }, { v: 'checkup', label: 'Check-up' }] },
@@ -75,37 +80,37 @@ export function build(key: string, a: Answers): Result {
   const flags: string[] = [];
   const notes: string[] = [];
   switch (key) {
-    case 'P1': r = { title: 'Pain assessment', minutes: 30, rows: [['Examination', FEE], ['Filling, if needed', RANGE]], notes, mode: 'instant', treatment: 'examination', flags }; break;
-    case 'P2': r = { title: 'Pain assessment', minutes: 45, rows: [['Examination and X-ray', FEE], ['Root canal, if needed', RANGE]], notes, mode: 'instant', treatment: 'examination', flags }; break;
-    case 'P3': r = { title: 'Gum assessment', minutes: 45, rows: [['Examination', FEE], ['Gum treatment, if needed', RANGE]], notes, mode: 'instant', treatment: 'examination', flags }; break;
-    case 'A1': r = { title: 'Whitening consultation', minutes: 30, rows: [['Consultation', FEE], ['Whitening', RANGE]], notes, mode: 'instant', treatment: 'whitening', flags }; break;
-    case 'A2': r = { title: 'Orthodontic consultation', minutes: 45, rows: [['Consultation', FEE], ['Clear aligners, if advised', RANGE]], notes, mode: 'request', treatment: 'braces-and-aligners', flags }; break;
-    case 'A3': r = { title: 'Cosmetic consultation', minutes: 30, rows: [['Consultation', FEE], ['Veneers or bonding, if advised', RANGE]], notes, mode: 'request', treatment: 'crowns-and-veneers', flags }; break;
-    case 'A4': r = { title: 'Repair consultation', minutes: 30, rows: [['Examination', FEE], ['Bonding or crown, if needed', RANGE]], notes, mode: 'instant', treatment: 'examination', flags }; break;
+    case 'P1': r = { title: 'Pain assessment', minutes: 30, rows: [['Examination', EXAM], ['Filling, if needed', R(110, 220)]], notes, mode: 'instant', treatment: 'examination', flags }; break;
+    case 'P2': r = { title: 'Pain assessment', minutes: 45, rows: [['Examination and X-ray', eur(65 + 25)], ['Root canal, if needed', R(450, 1100)]], notes, mode: 'instant', treatment: 'examination', flags }; break;
+    case 'P3': r = { title: 'Gum assessment', minutes: 45, rows: [['Examination', EXAM], ['Gum treatment, if needed', eur(90)]], notes, mode: 'instant', treatment: 'examination', flags }; break;
+    case 'A1': r = { title: 'Whitening consultation', minutes: 30, rows: [['Consultation', EXAM], ['Whitening', R(350, 450)]], notes, mode: 'instant', treatment: 'whitening', flags }; break;
+    case 'A2': r = { title: 'Orthodontic consultation', minutes: 45, rows: [['Consultation', ORTHO], ['Clear aligners, if advised', ALIGN]], notes, mode: 'request', treatment: 'braces-and-aligners', flags }; break;
+    case 'A3': r = { title: 'Cosmetic consultation', minutes: 30, rows: [['Consultation', EXAM], ['Veneers or bonding, if advised', R(250, 1150)]], notes, mode: 'request', treatment: 'crowns-and-veneers', flags }; break;
+    case 'A4': r = { title: 'Repair consultation', minutes: 30, rows: [['Examination', EXAM], ['Bonding or crown, if needed', R(250, 1150)]], notes, mode: 'instant', treatment: 'examination', flags }; break;
     case 'B': {
       const child = a.b_who === 'child';
       const second = a.b_visible === 'yes' ? 'Clear aligners, if advised' : 'Fixed braces, if advised';
       r = child
-        ? { title: 'Orthodontic assessment for a child', minutes: 30, rows: [['Assessment', FEE], [second, RANGE]], notes, mode: 'request', treatment: 'braces-and-aligners', flags }
-        : { title: 'Orthodontic consultation', minutes: 45, rows: [['Consultation', FEE], [second, RANGE]], notes, mode: 'request', treatment: 'braces-and-aligners', flags };
+        ? { title: 'Orthodontic assessment for a child', minutes: 30, rows: [['Assessment', ORTHO], [second, a.b_visible === 'yes' ? ALIGN : BRACES]], notes, mode: 'request', treatment: 'braces-and-aligners', flags }
+        : { title: 'Orthodontic consultation', minutes: 45, rows: [['Consultation', ORTHO], [second, a.b_visible === 'yes' ? ALIGN : BRACES]], notes, mode: 'request', treatment: 'braces-and-aligners', flags };
       if (child) notes.push('A parent or guardian needs to come to the first visit.');
       break;
     }
     case 'M': {
       const one = a.m_count === 'one';
-      r = { title: 'Implant consultation', minutes: one ? 45 : 60, rows: [['Consultation', FEE], [one ? 'Implant with crown, if advised' : 'Implants or dentures, if advised', RANGE]], notes, mode: 'request', treatment: 'implants', flags };
-      if (a.m_when === 'long') r.rows.push(['3D scan, if needed', FEE]);
+      r = { title: 'Implant consultation', minutes: one ? 45 : 60, rows: [['Consultation', eur(120)], [one ? 'Implant with crown, if advised' : 'Implants or dentures, if advised', IMPLANT]], notes, mode: 'request', treatment: 'implants', flags };
+      if (a.m_when === 'long') r.rows.push(['3D scan, if needed', eur(160)]);
       break;
     }
     default: { // C
       const over = a.c_last === 'over';
-      r = { title: over ? 'Check-up, clean and X-rays' : 'Check-up and clean', minutes: over ? 60 : 45, rows: [['Check-up and clean', FEE]], notes, mode: 'instant', treatment: 'check-up-and-clean', flags };
-      if (over) r.rows.push(['X-rays', FEE]);
+      r = { title: over ? 'Check-up, clean and X-rays' : 'Check-up and clean', minutes: over ? 60 : 45, rows: [['Check-up and clean', R(95, 140)]], notes, mode: 'instant', treatment: 'check-up-and-clean', flags };
+      if (over) r.rows.push(['X-rays', R(25, 80)]);
     }
   }
   // dala özel eklemeler
-  if (key === 'A1' && a.a_check === 'no') { r.minutes += 30; r.rows.push(['Check-up and clean', FEE]); }
-  if (key === 'C' && a.c_bleed === 'yes') { r.title = 'Check-up and gum care'; r.minutes += 15; r.rows.push(['Hygiene appointment', FEE]); }
+  if (key === 'A1' && a.a_check === 'no') { r.minutes += 30; r.rows.push(['Check-up and clean', R(95, 140)]); }
+  if (key === 'C' && a.c_bleed === 'yes') { r.title = 'Check-up and gum care'; r.minutes += 15; r.rows.push(['Hygiene appointment', R(85, 110)]); }
   if ((key === 'P1' || key === 'P2') && a.p_dur === 'long') { notes.push("We'll offer you the earliest slot today or tomorrow."); flags.push('urgent'); }
   if (key === 'P3' && a.p_smoke === 'yes') { notes.push("Smoking affects gum healing — we'll talk it through."); flags.push('smoker'); }
   if (key === 'M' && a.m_smoke === 'yes') { notes.push("Smoking affects how implants heal — we'll talk it through."); flags.push('smoker'); }

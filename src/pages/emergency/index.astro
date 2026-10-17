@@ -3,6 +3,7 @@ import Page from '../../layouts/Page.astro';
 import PageHead from '../../components/PageHead.astro';
 import DarkCard from '../../components/DarkCard.astro';
 import { emergencySituations, SAME_PRICE } from '../../data/content';
+import { treatmentFee } from '../../data/prices';
 ---
 <Page title="Emergency" description="In pain? What to do right now, and how to reach us.">
   <section class="sec wrap">
@@ -25,7 +26,7 @@ import { emergencySituations, SAME_PRICE } from '../../data/content';
   <section class="sec wrap">
     <div class="stack" data-reveal>
       <div class="etiket">[ FEE ]</div>
-      <div class="feeline"><span class="feeline__name">Emergency appointment</span><span class="feeline__v">€[FEE]</span></div>
+      <div class="feeline"><span class="feeline__name">Emergency appointment</span><span class="feeline__v">{treatmentFee('emergency')}</span></div>
       <p class="fixed-line">{SAME_PRICE}</p>
     </div>
   </section>
