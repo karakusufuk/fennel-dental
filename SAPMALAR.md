@@ -39,3 +39,15 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - **Erteleme:** `/book/?reschedule=<id>` yalnız 3. adımı gösterir, `Save new time →` ile kaydeder; eski saat serbest kalır; onay ekranı `[ MOVED ]`.
 - **Bekleme listesi:** /my-appointments/ katılımı adı olmadan `Patient` olarak ekler (hesap yok, ad sorulmuyor).
 - **İptal edilen satır:** gri ve üstü çizili + `CANCELLED`.
+
+## Aşama 5
+- **Alt rotalar `#hash` ile** (`/admin/#today`, `#week`, `#requests`, `#waiting`, `#settings`, `#activity`): sayfa tek ve statik; belge "alt rotalar" diyor, ayrı dosya şart koşmuyor.
+- **Dentist rolü:** varsayılan yalnız kendi sütunu; `All dentists` kutusuyla tüm sütunlar. Week/Requests/Waiting/Settings/Activity yalnız Reception ve Owner (Reception'a Settings/Activity yok). Owner cevapları hekimlerle aynı kuralla görür (hasta onay verdiyse).
+- **Tohumlu takvim:** her hekim için tohum = tarih + hekim; talep (request) olanların oranı %12 ve yalnız bugünden sonraki günlerde, yoksa Requests listesi yüzlerce kayıt olurdu. Sahte hasta adları/telefonlar tamamen uydurma (`+353 8X XXX XXXX`).
+- **Sürükle-bırak çakışması:** hedef çakışıyorsa çizgili gri "busy" desen; bırakılırsa hiçbir şey değişmez. `repeating-linear-gradient` sadece bu çizgili desen için (belge bunu açıkça istiyor; yüzey gradient'i değil).
+- **Koltuk (chair) görünümünde taşıma** hekimi korur, koltuğu değiştirir; hekim görünümünde koltuk, boşsa korunur yoksa otomatik atanır.
+- **Mobil Today:** hekim sekmeleriyle seçili hekimin gün listesi + `New appointment`; taşıma `Move…` ile (çekmece formu).
+- **Decline nedenleri** (belgede yok): *No availability*, *Not suitable — please call us*, *Duplicate request*.
+- **Bekleme listesi simülasyonu:** iptal edilen randevu için ilk uygun bekleyene "SMS" gider (günlüğe yazılır); `Accept` randevu oluşturur, `Decline` sıradakine geçer.
+- **Roles tablosu salt-okunur** (belge öyle istiyor); içerik tahminim.
+- **Çekmece Escape ile kapanır;** kaydedilmemiş Settings değişikliğinde sekme/hash değişince onay sorulur, sayfadan çıkarken tarayıcı uyarısı.

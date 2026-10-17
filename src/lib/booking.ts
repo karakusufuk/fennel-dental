@@ -189,7 +189,7 @@ function seedDay(date: string, st: Settings): Booking[] {
             if (r() < 0.2) flags.push('first-visit');
             if (r() < 0.15) flags.push('anxious');
             if (r() < 0.1) flags.push('smoker');
-            const requested = st.treatments[slug].mode === 'request' && r() < 0.5 && date > today();
+            const requested = st.treatments[slug].mode === 'request' && r() < 0.12 && date > today();
             out.push({
               id: `seed-${date}-${d.slug}-${i++}`,
               treatment: slug, dentist: d.slug, chair, date, time: fromMin(c), duration: dur,
@@ -220,7 +220,9 @@ export function ensureSeed() {
     done.add(d);
   }
   if (!add.length) return;
-  const all = allRaw().concat(add);
+  const existing = allRaw();
+  const have = new Set(existing.map((b) => b.id));
+  const all = existing.concat(add.filter((b) => !have.has(b.id)));
   mem[KEYS.seeded] = JSON.stringify([...done]);
   try { localStorage.setItem(KEYS.seeded, JSON.stringify([...done])); } catch { /* bellek */ }
   mem[KEYS.bookings] = JSON.stringify(all);
@@ -434,6 +436,18 @@ export function moveSync(id: string, to: { date: string; time: string; dentist?:
   if (old.date !== b.date || old.time !== b.time) offerSlot(old);
   return { booking: b, previous: old };
 }
+/** Taşıma mümkün mü? (panelde sürüklerken; kaydetmez) */
+export function canMove(id: string, to: { date: string; time: string; dentist?: string; chair?: number }) {
+  const cur = getBooking(id);
+  if (!cur) return false;
+  const dentist = to.dentist ?? cur.dentist;
+  const start = toMin(to.time);
+  const rg = dentistRange(to.date, dentist);
+  if (!rg || start < rg[0] || start + cur.duration > rg[1]) return false;
+  if (!isDentistFree(to.date, start, cur.duration, dentist, id)) return false;
+  const chair = freeChair(to.date, start, cur.duration, id, to.chair ?? cur.chair);
+  return !(chair === null || (to.chair && chair !== to.chair));
+}
 export async function rescheduleBooking(id: string, slot: { date: string; time: string; dentist?: string }) {
   await wait();
   return moveSync(id, slot).booking;
@@ -510,6 +524,7 @@ export const admin = {
   requests() { return bookings().filter((b) => b.status === 'requested').sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time)); },
   create(n: NewBooking) { return createBookingSync({ ...n, source: 'admin' }); },
   move: moveSync,
+  canMove,
   cancel: cancelSync,
   setStatus(id: string, status: Status) { const b = patch(id, (x) => { x.status = status; }); logEvent(`${b.patient.name}: ${status}`); return b; },
   setNotes(id: string, notes: string) { patch(id, (x) => { x.notes = notes; }); },
