@@ -352,3 +352,9 @@ body.has-sumbar .mbar { display: none; }
 }
 
 .page ul, .adm ul, .sumbar ul, .legal ul { list-style: none; padding: 0; margin: 0; }
+
+/* Yer tutucu yükseklik: betik yüklenirken sayfa kaymasın */
+.book { min-height: 760px; }
+.myapp { min-height: 420px; }
+.guided--page { min-height: 360px; }
+@media (max-width: 760px) { .book { min-height: 640px; } }

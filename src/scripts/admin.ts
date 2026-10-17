@@ -60,7 +60,7 @@ function shell(body: string) {
   const reqN = admin.requests().length;
   const nav = NAV.filter(([v]) => can.view(v)).map(([v, l]) => `<li><a href="#${v}" class="adm__l${A.view === v ? ' is-on' : ''}" ${A.view === v ? 'aria-current="page"' : ''}>${l}${v === 'requests' && reqN ? `<span class="badge mono">${reqN}</span>` : ''}</a></li>`).join('');
   return `<div class="adm__top"><a class="logo" href="/">fennel<span>/</span>dental</a><span class="mono adm__role">${esc(roleLabel)}</span><button type="button" class="linkbtn2" data-switch>Switch role</button></div>
-    <div class="adm__body"><nav class="adm__nav" aria-label="Admin"><ul>${nav}</ul></nav><main class="adm__main" id="adm-main">${body}</main></div>
+    <div class="adm__body"><nav class="adm__nav" aria-label="Admin"><ul>${nav}</ul></nav><main class="adm__main" id="main" tabindex="-1">${body}</main></div>
     ${drawerHTML()}${A.undo ? `<div class="undo" role="status"><span>${esc(A.undo.text)}</span><button type="button" class="btn btn--beyaz btn--sm" data-undo>Undo</button></div>` : ''}${A.toast ? `<div class="undo" role="status"><span>${esc(A.toast)}</span></div>` : ''}`;
 }
 
@@ -381,7 +381,7 @@ root.addEventListener('click', (e) => {
     try { sessionStorage.setItem(KEY, JSON.stringify(A.auth)); } catch { /* yok */ }
     A.view = 'today';
     location.hash = 'today';
-    render(); q('#adm-main', root)?.focus(); return;
+    render(); q('#main', root)?.focus(); return;
   }
   if (t.closest('[data-pick-dentist]')) { q('[data-dentpick]', root)!.hidden = false; return; }
   if (t.closest('[data-switch]')) { A.auth = null; A.drawer = null; try { sessionStorage.removeItem(KEY); } catch { /* yok */ } render(); return; }

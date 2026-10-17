@@ -51,3 +51,17 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - **Bekleme listesi simülasyonu:** iptal edilen randevu için ilk uygun bekleyene "SMS" gider (günlüğe yazılır); `Accept` randevu oluşturur, `Decline` sıradakine geçer.
 - **Roles tablosu salt-okunur** (belge öyle istiyor); içerik tahminim.
 - **Çekmece Escape ile kapanır;** kaydedilmemiş Settings değişikliğinde sekme/hash değişince onay sorulur, sayfadan çıkarken tarayıcı uyarısı.
+
+## Aşama 6
+- **Ana sayfada yalnız bağlantılar değişti:** header/footer/mobil çubuk, hero butonları, tedavi `Details →` / `Book this consultation →`, ekip satırları, "What brings you in?" sonuç butonları (`/book/?treatment=<slug>` + `Full fee list` → `/fees/`). Tasarım aynı. `WhatsApp` ve `Open in Maps →` hâlâ `#whatsapp` / `#map` (gerçek adres/numara yok, uydurulmadı).
+- **Ana sayfadaki sonuç butonlarının tedavi eşlemesi:** Pain → examination, Appearance → whitening, Braces → braces-and-aligners, Missing tooth → implants, Check-up → check-up-and-clean.
+- **Skip link** artık her sayfada `#main`'e gider (önceden yalnız ana sayfadaki `#treatments`'a gidiyordu; alt sayfalarda kırıktı, Lighthouse yakaladı).
+- **`/book/`, `/my-appointments/`, `/start/` için yer tutucu min-yükseklik:** betik yüklenirken içerik kaymasın (CLS 0.25 → 0).
+
+## Bilinen eksikler
+- `/my-appointments/` mobil LCP ~2,7 sn (içerik betikle çiziliyor); performans 96.
+- Admin sürükle-bırak yalnız fareyle (dokunmatikte `Move…`); gerçek parmakla denenmedi.
+- Admin `Today` kapalı günlerde (Pazar) ızgara yerine "closed" mesajı gösterir.
+- Admin Settings değişiklikleri yeni "tohumlu" günleri etkiler; zaten oluşmuş tohum randevular yeniden üretilmez (`Reset demo data` ile yenilenir).
+- Gerçek e-posta/SMS/sunucu yok; tüm veri tarayıcıda (`localStorage`).
+- Dış bağlantı `https://www.dentalcouncil.ie/` canlı kontrol edilmedi.

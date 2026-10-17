@@ -1,6 +1,8 @@
 ---
 import Img from './Img.astro';
 import { treatments } from '../data/treatments';
+import { treatmentPages } from '../data/content';
+const slugOf = (i: number) => treatmentPages[i].slug;
 ---
 <section class="sec wrap" id="treatments" aria-label="Treatments" data-treat>
   <div class="treat" data-reveal>
@@ -25,8 +27,8 @@ import { treatments } from '../data/treatments';
                 <div><dt>Fee</dt><dd>€[MIN]–€[MAX]</dd></div>
               </dl>
               <div class="tlinks">
-                <a href="#details">Details →</a>
-                <a class="k" href="#book">Book this consultation →</a>
+                <a href={`/treatments/${slugOf(i)}/`}>Details →</a>
+                <a class="k" href={`/book/?treatment=${slugOf(i)}`}>Book this consultation →</a>
               </div>
             </div>
           ))}
@@ -50,8 +52,8 @@ import { treatments } from '../data/treatments';
                     <div><dt>Fee</dt><dd>€[MIN]–€[MAX]</dd></div>
                   </dl>
                   <div class="tlinks">
-                    <a href="#details">Details →</a>
-                    <a class="k" href="#book">Book this consultation →</a>
+                    <a href={`/treatments/${slugOf(i)}/`}>Details →</a>
+                    <a class="k" href={`/book/?treatment=${slugOf(i)}`}>Book this consultation →</a>
                   </div>
                 </div>
                 <div class="tslot" data-slot></div>

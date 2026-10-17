@@ -43,8 +43,8 @@ const start = branches.find((b) => b.key === defaultBranch)!;
           </div>
           <p class="gcard__fixed">Exact price comes as a written treatment plan after your consultation.</p>
           <div class="gcard__act">
-            <a class="btn btn--beyaz" href="#book">{b.cta}</a>
-            <a class="plain" href="#fees">Full fee list</a>
+            <a class="btn btn--beyaz" href={`/book/?treatment=${b.slug}`}>{b.cta}</a>
+            <a class="plain" href="/fees/">Full fee list</a>
           </div>
         </div>
       ))}
