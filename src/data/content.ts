@@ -93,7 +93,7 @@ export const treatmentPages: TreatmentPage[] = [
 ];
 
 // /treatments/ listesinde 8. satır
-export const emergencyRow = { n: '08', name: 'Emergency care', href: '/emergency/', length: 'Same day' };
+export const emergencyRow = { n: '08', name: 'Emergency care', href: '/emergency/', length: '30 min' };
 
 export interface FeeRow { name: string; fee?: boolean; slug?: string }
 export const feeGroups: { title: string; rows: FeeRow[] }[] = [

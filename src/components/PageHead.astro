@@ -1,0 +1,9 @@
+---
+interface Props { label: string; title: string; intro?: string; h1?: boolean }
+const { label, title, intro } = Astro.props;
+---
+<div class="phead" data-reveal>
+  <div class="etiket">[ {label} ]</div>
+  <h1 class="h-bolum">{title}</h1>
+  {intro && <p class="intro">{intro}</p>}
+</div>

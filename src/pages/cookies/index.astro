@@ -1,6 +1,13 @@
 ---
 import Page from '../../layouts/Page.astro';
+import Legal from '../../components/Legal.astro';
+const L = '[LEGAL TEXT — to be supplied by the clinic]';
+const sections = [
+  { h: 'What are cookies', p: L },
+  { h: 'Cookies we use', p: L },
+  { h: 'Your choices', p: L },
+];
 ---
-<Page title="Cookies" description="Cookies.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ COOKIES ]</div><h1 class="h-bolum">Cookies</h1></div></section>
+<Page title="Cookies" description="How Fennel Dental uses cookies.">
+  <Legal label="COOKIES" title="Cookies." sections={sections} />
 </Page>

@@ -1,0 +1,17 @@
+---
+import Img from './Img.astro';
+interface Props { img: string; altBefore: string; altAfter: string; fade?: boolean }
+const { img, altBefore, altAfter, fade } = Astro.props;
+---
+<div class="panel panel--solo" data-solo>
+  <div class="panel__lbl etiket"><span>Before</span><span>After</span></div>
+  <div class="stage" data-stage>
+    <div class={`pair is-on${fade ? ' pair--fade' : ''}`}>
+      <Img base={`tedavi/${img}-once`} widths={[480, 768]} sizes="(max-width: 900px) 100vw, 470px" width={768} height={1024} alt={altBefore} />
+      <Img base={`tedavi/${img}-sonra`} widths={[480, 768]} sizes="(max-width: 900px) 100vw, 470px" width={768} height={1024} alt={altAfter} class="after" />
+    </div>
+  </div>
+  <div class="panel__ctl">
+    <button type="button" class="replay" data-replay>↻ Play again</button>
+  </div>
+</div>

@@ -1,6 +1,39 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import { feeGroups } from '../../data/content';
 ---
-<Page title="Fees" description="Our fees, in full.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ FEES ]</div><h1 class="h-bolum">Fees</h1></div></section>
+<Page title="Fees" description="Every treatment with its lowest and highest price.">
+  <section class="sec wrap">
+    <PageHead label="FEES" title="Our fees, in full." intro="Every treatment with its lowest and highest price. Your exact price comes as a written treatment plan after your consultation." />
+    <div class="stack stack--lg" data-reveal style="margin-top:40px">
+      {feeGroups.map((g) => (
+        <div class="feewrap">
+          <table class="feetable">
+            <caption>{g.title}</caption>
+            <thead><tr><th scope="col">Treatment</th><th scope="col" class="num">From</th><th scope="col" class="num">To</th></tr></thead>
+            <tbody>
+              {g.rows.map((r) => (
+                <tr data-slug={r.slug}>
+                  <th scope="row">{r.name}</th>
+                  <td class="num" data-min>{r.fee ? '€[FEE]' : '€[MIN]'}</td>
+                  <td class="num" data-max>{r.fee ? '€[FEE]' : '€[MAX]'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <h2 class="sub-h">PRSI and medical cards</h2>
+      <p class="intro">If you qualify for PRSI dental benefit, your check-up is free or reduced. We'll check your eligibility when you book. Receipts are provided for health insurance and Med 2 tax relief claims.</p>
+      <p class="mono" style="font-size:13px;color:var(--ikincil)">Last updated: [DATE]</p>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/fees';
+  </script>
 </Page>

@@ -1,0 +1,41 @@
+---
+import Page from '../../../layouts/Page.astro';
+import Img from '../../../components/Img.astro';
+import { team } from '../../../data/team';
+import { treatmentPages } from '../../../data/content';
+
+export function getStaticPaths() {
+  return team.map((d) => ({ params: { slug: d.slug }, props: { d } }));
+}
+const { d } = Astro.props;
+const theirs = [
+  ...treatmentPages.filter((t) => t.dentists.includes(d.slug)).map((t) => ({ name: t.name, href: `/treatments/${t.slug}/` })),
+  ...(['daniel-oconnor', 'aoife-murphy'].includes(d.slug) ? [{ name: 'Emergency care', href: '/emergency/' }] : []),
+];
+---
+<Page title={d.name} description={`${d.name}, ${d.role}. ${d.bio}`}>
+  <section class="sec wrap">
+    <div class="profile" data-reveal>
+      <div class="profile__img">
+        <Img base={`ekip/${d.img}`} widths={[320, 640]} sizes="(max-width: 760px) 100vw, 420px" width={640} height={800} alt={d.alt} loading="eager" />
+      </div>
+      <div class="stack">
+        <div class="etiket">[ DENTIST ]</div>
+        <h1 class="h-bolum">{d.name}</h1>
+        <p class="role">{d.role}</p>
+        <p class="mono" style="font-size:14px;color:var(--ikincil)">{d.langs} · DCR [NO]</p>
+        <p class="intro">{d.bio}</p>
+        <h2 class="sub-h">Treatments</h2>
+        <ul class="linklist">
+          {theirs.map((t) => <li><a href={t.href}>{t.name} →</a></li>)}
+        </ul>
+        <h2 class="sub-h">Next free slots</h2>
+        <ul class="slots" data-next-slots data-dentist={d.slug}><li class="mono">…</li></ul>
+        <div class="btnrow"><a class="btn btn--kobalt" href={`/book/?dentist=${d.slug}`}>Book with {d.name} →</a></div>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../../../scripts/slots';
+  </script>
+</Page>

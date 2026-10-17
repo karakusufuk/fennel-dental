@@ -1,0 +1,9 @@
+---
+interface Props { title: string; cta: string; href: string; eyebrow?: string }
+const { title, cta, href, eyebrow } = Astro.props;
+---
+<div class="gcard gcard--call on-dark" data-reveal>
+  {eyebrow && <div class="etiket">{eyebrow}</div>}
+  <div class="gcard__t">{title}</div>
+  <a class="btn btn--beyaz" style="align-self:flex-start" href={href}>{cta}</a>
+</div>

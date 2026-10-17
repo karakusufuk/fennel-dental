@@ -22,3 +22,106 @@ body:has(.hdr--solid) { padding-top: 60px; }
 @media (max-width: 760px) {
   .page > .sec:first-child { padding-top: 56px; }
 }
+
+/* ───────── Tedavi listesi ───────── */
+.tl-list { margin-top: 40px; border-top: 1px solid var(--cizgi); }
+.tl-list > li { border-bottom: 1px solid var(--cizgi); }
+.tl-row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 150px 150px; gap: 16px; align-items: baseline; padding: 22px 12px; text-decoration: none; color: var(--murekkep); transition: background-color 200ms; }
+.tl-row:hover, .tl-row:focus-visible { background: var(--yuzey); color: var(--murekkep); }
+.tl-n { font-family: var(--f-mono); font-size: 14px; line-height: 1.4; color: var(--ikincil); }
+.tl-name { font-family: var(--f-baslik); font-weight: 600; font-size: 30px; line-height: 1.1; letter-spacing: -0.03em; }
+.tl-len, .tl-fee { font-family: var(--f-mono); font-size: 14px; line-height: 1.4; text-align: right; }
+.tl-len { color: var(--ikincil); }
+
+/* ───────── Tedavi sayfası ───────── */
+.tdetail { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--kolon-arasi); margin-top: 40px; align-items: start; }
+.tdetail--media { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.tinfo--page { max-width: 520px; }
+.btnrow { display: flex; gap: 12px; flex-wrap: wrap; }
+.panel--solo { min-height: 700px; }
+.steps { border-top: 1px solid var(--cizgi); margin-top: 16px; max-width: 860px; }
+.steps li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding: 24px 0; border-bottom: 1px solid var(--cizgi); }
+.steps__n { font-family: var(--f-mono); font-size: 14px; line-height: 1.8; color: var(--ikincil); }
+.steps h3 { font-family: var(--f-baslik); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 6px; }
+.steps p { max-width: 62ch; }
+.feeline { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--cizgi); border-bottom: 1px solid var(--cizgi); padding: 20px 0; }
+.feeline__name { font-family: var(--f-baslik); font-weight: 600; font-size: 28px; letter-spacing: -0.03em; line-height: 1.1; }
+.feeline__v { font-family: var(--f-mono); font-size: 15px; }
+.pn { display: flex; justify-content: space-between; gap: 24px; border-top: 1px solid var(--cizgi); padding-top: 24px; }
+.pn a { display: flex; flex-direction: column; gap: 4px; text-decoration: none; min-height: 44px; }
+.pn__r { text-align: right; align-items: flex-end; }
+.pn__n { font-family: var(--f-baslik); font-weight: 600; font-size: 24px; letter-spacing: -0.03em; line-height: 1.15; color: var(--murekkep); }
+.pn a:hover .pn__n { color: var(--kobalt); }
+.sub-h { font-family: var(--f-baslik); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -0.03em; }
+
+/* Whitening kaydırıcısı */
+.cmp { position: relative; width: min(100%, 470px); aspect-ratio: 3 / 4; margin: 0 auto; touch-action: none; cursor: ew-resize; overflow: hidden; border-radius: var(--kose); }
+.cmp__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+.cmp__img--before { filter: sepia(0.35) saturate(1.2) brightness(0.96); }
+.cmp__img--after { filter: brightness(1.04); }
+.cmp__after { position: absolute; inset: 0; clip-path: inset(0 0 0 50%); }
+.cmp__line { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--murekkep); pointer-events: none; }
+.cmp__handle { position: absolute; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; background: var(--yuzey); border: 1px solid var(--cizgi); border-radius: var(--kose); cursor: ew-resize; }
+.cmp__handle::before, .cmp__handle::after { content: ''; position: absolute; top: 14px; bottom: 14px; width: 2px; background: var(--murekkep); }
+.cmp__handle::before { left: 16px; }
+.cmp__handle::after { right: 16px; }
+
+/* ───────── Acil ───────── */
+.warn { max-width: 62ch; }
+.sit { border-top: 1px solid var(--cizgi); max-width: 860px; }
+.sit li { padding: 22px 0; border-bottom: 1px solid var(--cizgi); }
+.sit h3 { font-family: var(--f-baslik); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 6px; }
+.sit p { max-width: 62ch; }
+
+/* ───────── Ücretler ───────── */
+.feewrap { overflow-x: auto; max-width: 860px; }
+.feetable { width: 100%; border-collapse: collapse; min-width: 420px; }
+.feetable caption { text-align: left; font-family: var(--f-baslik); font-weight: 600; font-size: 28px; line-height: 1.1; letter-spacing: -0.03em; padding-bottom: 12px; }
+.feetable th, .feetable td { text-align: left; padding: 14px 0; border-top: 1px solid var(--cizgi); font-size: 16px; line-height: 1.4; font-weight: 400; }
+.feetable tbody tr:last-child th, .feetable tbody tr:last-child td { border-bottom: 1px solid var(--cizgi); }
+.feetable thead th { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ikincil); }
+.feetable .num { text-align: right; font-family: var(--f-mono); font-size: 14px; white-space: nowrap; padding-left: 16px; }
+
+/* ───────── Hekim profili ───────── */
+.profile { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 48px; align-items: start; }
+.profile__img { aspect-ratio: 4 / 5; border-radius: var(--kose); overflow: hidden; background: var(--portre-zemin); }
+.profile__img img { width: 100%; height: 100%; object-fit: cover; }
+.role { font-size: 19px; }
+.linklist { display: flex; flex-direction: column; }
+.linklist a { display: inline-flex; align-items: center; min-height: 44px; }
+.slots { display: flex; flex-direction: column; gap: 4px; }
+.slot-k { color: var(--kobalt); font-size: 15px; line-height: 1.9; }
+
+/* ───────── Klinik ───────── */
+.clinic { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.clinic__img { width: 100%; height: 680px; object-fit: cover; object-position: 50% 60%; border-radius: var(--kose); }
+.cgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 24px; }
+.cgrid > div { display: flex; flex-direction: column; gap: 10px; }
+.cgrid p { line-height: 1.6; }
+.maps-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: -8px; }
+.page .hours > div.is-today { color: #fff; background: var(--murekkep); }
+.page .hours .sun { color: var(--ikincil); }
+.page .hours .sun.is-today { color: #fff; }
+
+/* ───────── Yasal ───────── */
+.legal { display: flex; flex-direction: column; gap: 32px; margin-top: 40px; max-width: 62ch; }
+.legal p { max-width: 62ch; }
+
+@media (max-width: 900px) {
+  .tdetail--media { grid-template-columns: minmax(0, 1fr); }
+  .panel--solo { min-height: 0; padding: 20px; }
+  .profile, .clinic { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .profile__img { max-width: 420px; }
+  .clinic__img { height: min(680px, 125vw); }
+}
+@media (max-width: 760px) {
+  .tl-row { grid-template-columns: 36px minmax(0, 1fr) auto; grid-template-areas: 'n name name' 'n len fee'; gap: 4px 12px; padding: 18px 0; }
+  .tl-n { grid-area: n; }
+  .tl-name { grid-area: name; font-size: 26px; }
+  .tl-len { grid-area: len; text-align: left; }
+  .tl-fee { grid-area: fee; }
+  .cgrid { grid-template-columns: minmax(0, 1fr); }
+  .pn__n { font-size: 20px; }
+  .feeline__name { font-size: 24px; }
+  .steps li { grid-template-columns: 40px minmax(0, 1fr); }
+}

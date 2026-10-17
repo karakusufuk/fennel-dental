@@ -1,6 +1,13 @@
 ---
 import Page from '../../layouts/Page.astro';
+import Team from '../../components/Team.astro';
 ---
-<Page title="Team" description="Who you will see.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ TEAM ]</div><h1 class="h-bolum">Team</h1></div></section>
+<Page title="Team" description="The dentists you will see at Fennel Dental.">
+  <Team />
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <p class="intro">All our dentists are registered with the Dental Council of Ireland.</p>
+      <a class="link-k back-link" href="https://www.dentalcouncil.ie/" target="_blank" rel="noopener noreferrer">Check the register →</a>
+    </div>
+  </section>
 </Page>

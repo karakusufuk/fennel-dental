@@ -1,6 +1,17 @@
 ---
 import Page from '../../layouts/Page.astro';
+import Legal from '../../components/Legal.astro';
+const L = '[LEGAL TEXT — to be supplied by the clinic]';
+const sections = [
+  { h: 'Who we are', p: L },
+  { h: 'What we collect', p: L },
+  { h: 'How we use your information', p: L },
+  { h: 'Your guided start answers', p: 'The questions in our guided start are anonymous. Your answers are only sent to your dentist if you tick "Send my answers to my dentist" when you book, and only for that appointment.' },
+  { h: 'How long we keep it', p: L },
+  { h: 'Your rights', p: L },
+  { h: 'Contact', p: L },
+];
 ---
-<Page title="Privacy" description="Privacy.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ PRIVACY ]</div><h1 class="h-bolum">Privacy</h1></div></section>
+<Page title="Privacy" description="How Fennel Dental handles your information.">
+  <Legal label="PRIVACY" title="Privacy." sections={sections} />
 </Page>

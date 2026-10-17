@@ -1,6 +1,32 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import DarkCard from '../../components/DarkCard.astro';
+import { emergencySituations, SAME_PRICE } from '../../data/content';
 ---
-<Page title="Emergency" description="What to do right now.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ EMERGENCY ]</div><h1 class="h-bolum">Emergency</h1></div></section>
+<Page title="Emergency" description="In pain? What to do right now, and how to reach us.">
+  <section class="sec wrap">
+    <PageHead label="EMERGENCY" title="In pain? Here's what to do right now." />
+    <div class="stack" data-reveal style="margin-top:24px">
+      <DarkCard title="Call us first. We keep slots free every day for emergencies." cta="Call 01 555 0182 →" href="tel:+35315550182" />
+      <p class="mono" style="font-size:14px;color:var(--ikincil)">Out of hours: [OUT-OF-HOURS NUMBER]</p>
+      <p class="warn"><strong>If swelling is affecting your breathing or swallowing, or you've had a blow to the head, go to an Emergency Department or call 112.</strong></p>
+    </div>
+  </section>
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <div class="etiket">[ COMMON SITUATIONS ]</div>
+      <h2 class="h-bolum">Common situations.</h2>
+      <ul class="sit">
+        {emergencySituations.map((s) => <li><h3>{s.t}</h3><p>{s.d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <div class="etiket">[ FEE ]</div>
+      <div class="feeline"><span class="feeline__name">Emergency appointment</span><span class="feeline__v">€[FEE]</span></div>
+      <p class="fixed-line">{SAME_PRICE}</p>
+    </div>
+  </section>
 </Page>

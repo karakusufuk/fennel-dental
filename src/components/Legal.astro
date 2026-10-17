@@ -1,0 +1,11 @@
+---
+import PageHead from './PageHead.astro';
+interface Props { label: string; title: string; intro?: string; sections: { h: string; p: string }[] }
+const { label, title, intro, sections } = Astro.props;
+---
+<section class="sec wrap">
+  <PageHead label={label} title={title} intro={intro} />
+  <div class="legal" data-reveal>
+    {sections.map((s) => (<section><h2 class="sub-h">{s.h}</h2><p>{s.p}</p></section>))}
+  </div>
+</section>

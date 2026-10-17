@@ -1,6 +1,46 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import Img from '../../components/Img.astro';
 ---
-<Page title="Clinic" description="Find us.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ CLINIC ]</div><h1 class="h-bolum">Clinic</h1></div></section>
+<Page title="Clinic" description="Where to find Fennel Dental, opening hours and how to get here.">
+  <section class="sec wrap">
+    <PageHead label="CLINIC" title="Find us." />
+    <div class="clinic" data-reveal style="margin-top:40px">
+      <Img base="klinik/bina" widths={[640, 1122]} sizes="(max-width: 900px) 100vw, 640px" width={1122} height={1402} class="clinic__img" alt="The clinic: a Georgian townhouse with a cobalt blue front door and granite steps" loading="eager" />
+      <div class="clinic__r">
+        <div class="cgrid">
+          <div>
+            <div class="etiket">Address</div>
+            <p>[STREET], Dublin 4</p>
+            <a class="maps-link" href="#map">Open in Maps →</a>
+          </div>
+          <div>
+            <div class="etiket">Opening hours</div>
+            <div class="hours" data-hours>
+              <div data-days="1,2,3,4,5">Mon–Fri&nbsp;&nbsp;08:30–17:30</div>
+              <div data-days="6">Sat&nbsp;&nbsp;09:00–13:00</div>
+              <div class="sun" data-days="0">Sun&nbsp;&nbsp;Closed</div>
+            </div>
+          </div>
+          <div>
+            <div class="etiket">Getting here</div>
+            <p>[TRANSPORT — bus, DART, parking]</p>
+          </div>
+          <div>
+            <div class="etiket">Access</div>
+            <p>There are steps at the front door. Step-free access is through [SIDE ENTRANCE] — call ahead and we'll meet you.</p>
+          </div>
+          <div>
+            <div class="etiket">Payment</div>
+            <p>Card, cash, bank transfer.<br />Monthly instalments on longer treatments.</p>
+          </div>
+          <div>
+            <div class="etiket">PRSI &amp; insurance</div>
+            <p>PRSI dental benefit accepted.<br />Receipts for health insurance claims.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Page>

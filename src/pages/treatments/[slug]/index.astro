@@ -1,0 +1,89 @@
+---
+import Page from '../../../layouts/Page.astro';
+import PageHead from '../../../components/PageHead.astro';
+import Stage from '../../../components/Stage.astro';
+import Team from '../../../components/Team.astro';
+import { treatmentPages, emergencyRow, SAME_PRICE } from '../../../data/content';
+
+export function getStaticPaths() {
+  return treatmentPages.map((t) => ({ params: { slug: t.slug }, props: { t } }));
+}
+const { t } = Astro.props;
+const ring = [...treatmentPages.map((x) => ({ name: x.name, href: `/treatments/${x.slug}/` })), { name: emergencyRow.name, href: emergencyRow.href }];
+const i = treatmentPages.findIndex((x) => x.slug === t.slug);
+const prev = ring[(i + ring.length - 1) % ring.length];
+const next = ring[(i + 1) % ring.length];
+---
+<Page title={t.name} description={t.intro}>
+  <section class="sec wrap">
+    <PageHead label={`TREATMENT ${t.n}`} title={t.name} intro={t.intro} />
+    <div class={`tdetail${t.img || t.compare ? ' tdetail--media' : ''}`} data-reveal>
+      <div class="stack">
+        <dl class="tinfo tinfo--page">
+          <div><dt>Length</dt><dd>{t.length}</dd></div>
+          <div><dt>Visits</dt><dd>{t.visits}</dd></div>
+          <div><dt>Feels like</dt><dd class="sans">{t.feels}</dd></div>
+          <div><dt>Fee</dt><dd data-fee={t.slug}>€[MIN]–€[MAX]</dd></div>
+        </dl>
+        <div class="btnrow">
+          <a class="btn btn--kobalt" href={`/book/?treatment=${t.slug}`}>Book this consultation →</a>
+          <a class="btn btn--yuzey" href={`/start/?branch=${t.branch}`}>Not sure? Start in 60 seconds</a>
+        </div>
+      </div>
+      {t.compare && (
+        <div class="panel panel--solo compare" data-compare>
+          <div class="panel__lbl etiket"><span>Before</span><span>After</span></div>
+          <div class="cmp" data-cmp-box>
+            <picture class="cmp__img-wrap">
+              <img class="cmp__img cmp__img--before" src={`/img/tedavi/${t.img}-sonra-768.webp`} alt="Before: teeth with a yellow tint" width="768" height="1024" />
+            </picture>
+            <div class="cmp__after" data-cmp-after>
+              <img class="cmp__img cmp__img--after" src={`/img/tedavi/${t.img}-sonra-768.webp`} alt="After: lighter teeth" width="768" height="1024" />
+            </div>
+            <div class="cmp__line" data-cmp-line></div>
+            <div class="cmp__handle" data-cmp-handle role="slider" tabindex="0" aria-label="Before and after whitening" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"></div>
+          </div>
+          <div class="panel__ctl"><span class="etiket">Drag or use the arrow keys</span></div>
+        </div>
+      )}
+      {t.img && !t.compare && <Stage img={t.img} altBefore={t.altBefore!} altAfter={t.altAfter!} fade={t.fade} />}
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <div class="etiket">[ WHAT HAPPENS ]</div>
+      <h2 class="h-bolum">What happens.</h2>
+      <ol class="steps">
+        {t.steps.map((s, k) => (
+          <li><span class="steps__n">{String(k + 1).padStart(2, '0')}</span><div><h3>{s.t}</h3><p>{s.d}</p></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Team doctors={t.dentists} label="WHO DOES IT" title="Who does it." id="who" />
+
+  <section class="sec wrap">
+    <div class="stack" data-reveal>
+      <div class="etiket">[ FEE ]</div>
+      <div class="feeline">
+        <span class="feeline__name">{t.name}</span>
+        <span class="feeline__v" data-fee={t.slug}>€[MIN]–€[MAX]</span>
+      </div>
+      <p class="fixed-line">{SAME_PRICE}</p>
+      <a class="link-k back-link" href="/fees/">Full fee list →</a>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <nav class="pn" aria-label="Other treatments">
+      <a href={prev.href}><span class="etiket">← Previous</span><span class="pn__n">{prev.name}</span></a>
+      <a href={next.href} class="pn__r"><span class="etiket">Next →</span><span class="pn__n">{next.name}</span></a>
+    </nav>
+  </section>
+  <script>
+    import '../../../scripts/solo';
+    import '../../../scripts/fees';
+  </script>
+</Page>

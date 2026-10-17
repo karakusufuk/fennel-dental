@@ -1,6 +1,30 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import DarkCard from '../../components/DarkCard.astro';
+import { treatmentPages, emergencyRow } from '../../data/content';
+const rows = [
+  ...treatmentPages.map((t) => ({ n: t.n, name: t.name, href: `/treatments/${t.slug}/`, length: t.length, fee: '€[MIN]–€[MAX]' })),
+  { n: emergencyRow.n, name: emergencyRow.name, href: emergencyRow.href, length: emergencyRow.length, fee: '€[FEE]' },
+];
 ---
-<Page title="Treatments" description="Everything we do, and what it costs.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ TREATMENTS ]</div><h1 class="h-bolum">Treatments</h1></div></section>
+<Page title="Treatments" description="Every treatment we offer, how long it takes and its price range.">
+  <section class="sec wrap">
+    <PageHead label="TREATMENTS" title="Everything we do, and what it costs." intro="Pick a treatment to see how long it takes, how it feels and the price range." />
+    <ol class="tl-list" data-reveal>
+      {rows.map((r) => (
+        <li>
+          <a class="tl-row" href={r.href}>
+            <span class="tl-n">{r.n}</span>
+            <span class="tl-name">{r.name}</span>
+            <span class="tl-len">{r.length}</span>
+            <span class="tl-fee">{r.fee}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="sec wrap">
+    <DarkCard title="Not sure what you need?" cta="Start in 60 seconds →" href="/start/" />
+  </section>
 </Page>

@@ -1,15 +1,18 @@
 ---
 import Img from './Img.astro';
-import { team } from '../data/team';
+import { team as allTeam } from '../data/team';
+interface Props { doctors?: string[]; label?: string; title?: string; id?: string }
+const { doctors, label = 'Team', title = "Who you'll see.", id = 'team' } = Astro.props;
+const team = doctors ? allTeam.filter((d) => doctors.includes(d.slug)) : allTeam;
 ---
-<section class="sec wrap" id="team" aria-label="Team" data-team>
+<section class="sec wrap" id={id} aria-label={label} data-team>
   <div class="team" data-reveal>
     <div class="team__main">
-      <div class="etiket">[ Team ]</div>
-      <h2 class="h-bolum">Who you'll see.</h2>
+      <div class="etiket">[ {label} ]</div>
+      <h2 class="h-bolum">{title}</h2>
       <div class="team__rows" data-rows>
         {team.map((d, i) => (
-          <a href="#doctor" class="trow" data-i={i}>
+          <a href={`/team/${d.slug}/`} class="trow" data-i={i}>
             <Img base={`ekip/${d.img}`} widths={[320, 640]} sizes="56px" width={640} height={800} alt={d.alt} class="d-thumb" />
             <span class="d-name">{d.name}</span>
             <span class="d-role">{d.role}</span>

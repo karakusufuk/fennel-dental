@@ -1,6 +1,13 @@
 ---
 import Page from '../../layouts/Page.astro';
+import Legal from '../../components/Legal.astro';
+const L = '[LEGAL TEXT — to be supplied by the clinic]';
+const sections = [
+  { h: 'Our commitment', p: "We aim to meet WCAG 2.2 AA. If something doesn't work for you, call 01 555 0182 and we'll book you by phone." },
+  { h: 'Known limitations', p: L },
+  { h: 'Contact us', p: L },
+];
 ---
-<Page title="Accessibility" description="Accessibility.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ ACCESSIBILITY ]</div><h1 class="h-bolum">Accessibility</h1></div></section>
+<Page title="Accessibility" description="Our accessibility statement.">
+  <Legal label="ACCESSIBILITY" title="Accessibility." sections={sections} />
 </Page>
