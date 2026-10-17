@@ -15,6 +15,10 @@ export function initTreatments() {
   const progN = $('[data-prog-n]', sec)!;
   const total = items.length;
   const narrow = matchMedia('(max-width: 900px)');
+  const phone = matchMedia('(max-width: 760px)');
+  const tabs = $$<HTMLButtonElement>('.ttab', sec);
+  const descs = $$('.tdesc', sec);
+  const mslot = $('[data-mslot]', sec)!;
   let cur = 0;
 
   // Geçiş: 360ms bekleme + 3 sn feather silme + %4 büyüme / 12px yukarı (CSS keyframes)
@@ -26,7 +30,11 @@ export function initTreatments() {
 
   // Dar ekranda panel, aktif satırın açıklamasının altına taşınır
   const place = () => {
-    if (narrow.matches) {
+    if (phone.matches) {
+      // Telefon: sekmeli sahne, panel sabit alanda
+      mslot.appendChild(panel);
+      panel.classList.remove('panel--moved');
+    } else if (narrow.matches) {
       slots[cur].appendChild(panel);
       panel.classList.add('panel--moved');
     } else {
@@ -43,6 +51,8 @@ export function initTreatments() {
       b.setAttribute('aria-expanded', String(on));
       dets[k].classList.toggle('is-open', on);
     });
+    tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    descs.forEach((d, k) => d.classList.toggle('is-on', k === i));
     pairs.forEach((p, k) => p.classList.toggle('is-on', k === i));
     prog.style.width = `${((i + 1) / total) * 100}%`;
     progN.textContent = `${i + 1} / ${total}`;
@@ -51,6 +61,18 @@ export function initTreatments() {
   };
 
   btns.forEach((b, i) => b.addEventListener('click', () => select(i)));
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', (e) => {
+      const k = e.key;
+      if (k !== 'ArrowRight' && k !== 'ArrowLeft') return;
+      e.preventDefault();
+      const n = (i + (k === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+      select(n);
+      tabs[n].focus();
+    });
+  });
+  phone.addEventListener('change', () => { place(); play(); });
   $('[data-replay]', sec)!.addEventListener('click', play);
   narrow.addEventListener('change', () => { place(); play(); });
   place();

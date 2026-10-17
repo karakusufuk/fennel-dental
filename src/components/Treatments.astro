@@ -7,6 +7,31 @@ import { treatments } from '../data/treatments';
     <div class="treat__list">
       <div class="etiket">[ Treatments ]</div>
       <h2 class="h-bolum">What actually happens.</h2>
+      <div class="tscene" data-tscene>
+        <div class="ttabs" role="tablist" aria-label="Treatments">
+          {treatments.map((t, i) => (
+            <button type="button" role="tab" class="ttab" id={`ttab-${i}`} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`tdesc-${i}`} tabindex={i === 0 ? 0 : -1}>{t.name}</button>
+          ))}
+        </div>
+        <div class="tslotm" data-mslot></div>
+        <div class="tdescs">
+          {treatments.map((t, i) => (
+            <div class={`tdesc${i === 0 ? ' is-on' : ''}`} role="tabpanel" id={`tdesc-${i}`} aria-labelledby={`ttab-${i}`}>
+              <p>{t.desc}</p>
+              <dl class="tinfo">
+                <div><dt>Length</dt><dd>{t.length}</dd></div>
+                <div><dt>Visits</dt><dd>{t.visits}</dd></div>
+                <div><dt>Feels like</dt><dd class="sans">{t.feels}</dd></div>
+                <div><dt>Fee</dt><dd>€[MIN]–€[MAX]</dd></div>
+              </dl>
+              <div class="tlinks">
+                <a href="#details">Details →</a>
+                <a class="k" href="#book">Book this consultation →</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       <ol class="tlist">
         {treatments.map((t, i) => (
           <li data-t={i}>

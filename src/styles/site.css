@@ -92,6 +92,7 @@ a:hover { color: var(--kobalt); }
   height: max(760px, min(880px, 100svh));
   --parallax: 22;
 }
+.hero__stage { display: contents; }
 .hero__back { position: absolute; inset: -24px; width: calc(100% + 48px); height: calc(100% + 48px); max-width: none; object-fit: cover; will-change: transform; }
 .hero__head { position: relative; z-index: 1; padding-top: 192px; }
 .hero h1 { font-family: var(--f-baslik); font-weight: 600; font-size: var(--hero-boyut); line-height: 0.9; letter-spacing: -0.05em; max-width: 7.4em; }
@@ -171,6 +172,22 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 .prog__bar { flex: 1; height: 2px; background: var(--cizgi); position: relative; }
 .prog__bar > i { position: absolute; left: 0; top: 0; height: 2px; background: var(--kobalt); transition: width 300ms var(--ease-giris); }
 .prog__n { font-family: var(--f-mono); font-size: 14px; line-height: 1.4; }
+
+/* Mobil sekmeli tedavi sahnesi (≤760px'te görünür) */
+.tscene { display: none; }
+.ttabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.ttab { grid-column: span 2; min-height: 44px; padding: 2px 6px; border-radius: var(--kose); border: 1px solid var(--cizgi); background: var(--yuzey); font-size: 14px; font-weight: 500; line-height: 1.15; cursor: pointer; text-align: center; transition: background-color 200ms, border-color 200ms, color 200ms; }
+.ttab:nth-child(n+4) { grid-column: span 3; }
+.ttab[aria-selected="true"] { background: var(--kobalt); border-color: var(--kobalt); color: #fff; }
+.tdescs { display: grid; }
+.tdesc { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 8px; visibility: hidden; opacity: 0; transition: opacity 200ms, visibility 0s linear 200ms; }
+.tdesc.is-on { visibility: visible; opacity: 1; transition: opacity 200ms, visibility 0s; }
+.tdesc > p { font-size: 15px; line-height: 1.45; }
+.tdesc .tinfo { max-width: none; }
+.tdesc .tinfo > div { padding: 6px 10px; }
+.tdesc .tinfo dd { margin-top: 2px; font-size: 14px; }
+.tdesc .tlinks { gap: 20px; font-size: 14px; }
+.tdesc .tlinks a { min-height: 40px; }
 
 /* ───────── Yönlendirme ───────── */
 .guided { max-width: 860px; display: flex; flex-direction: column; gap: 24px; }
@@ -308,15 +325,30 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
   .logo { font-size: 22px; }
   .hdr__in { gap: 12px; }
 
-  /* Hero: başlık üstte, ön katman altında, alt içerik görselin altında */
-  .hero { height: auto; display: flex; flex-direction: column; padding-bottom: 40px; }
-  .hero__head { padding-top: 104px; }
-  .hero__front { position: relative; right: auto; bottom: auto; z-index: 2; height: auto; width: calc(100% + 24px); max-width: none; margin: -8px -12px 0; align-self: center;
-    /* alt kenar düz kesik görünmesin: fotoğraf yumuşakça solar */
-    -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%); mask-image: linear-gradient(180deg, #000 78%, transparent 100%); }
-  .hero__low { position: relative; bottom: auto; z-index: 3; margin-top: -8px; }
-  .strip { max-width: 100%; }
+  /* Hero (mobil): slogan → net kenarlı banner → butonlar → tek cümle. Bulanık zemin / solma yok. */
+  .hero { height: auto; background: var(--zemin); padding-bottom: 32px; }
+  .hero__head { padding-top: 96px; }
+  .hero__stage { display: block; position: relative; aspect-ratio: 3 / 2; margin: 24px var(--kenar) 0; border-radius: var(--kose); overflow: hidden; background: #E6E9EB; }
+  .hero__back, .hero__front { position: absolute; inset: 0; right: auto; bottom: auto; width: 100%; height: 100%; max-width: none; object-fit: cover; transform: none !important; }
+  .hero__low { position: static; margin-top: 24px; }
+  .hero__low .wrap { gap: 16px; }
+  .hero__btns { flex-direction: column; order: 1; }
+  .hero__btns .btn { width: 100%; min-height: 52px; }
+  .hero__p { order: 2; font-size: 17px; max-width: none; }
+  .strip { display: none; }
 
+  /* Tedavi sahnesi: sekmeler üstte, sahne ve açıklama aynı ekranda, yerleşim sabit */
+  .tlist { display: none; }
+  .treat__list { gap: 16px; }
+  .treat__list .h-bolum { font-size: 36px; }
+  .tscene { display: flex; flex-direction: column; gap: 8px; height: calc(100svh - 60px - 77px - 12px); min-height: 540px; scroll-margin-top: 66px; margin-top: 8px; }
+  .tslotm { flex: 1 1 0; min-height: 0; display: flex; }
+  .tslotm .panel { flex: 1; min-height: 0; padding: 12px 12px 4px; gap: 4px; justify-content: flex-start; }
+  .tslotm .stage { flex: 1 1 0; min-height: 0; width: auto; max-width: 100%; align-self: center; margin: 0; }
+  .tslotm .panel__ctl { flex-direction: row; align-items: center; gap: 16px; }
+  .tslotm .replay { flex: none; align-self: auto; }
+  .tslotm .prog { flex: 1; }
+  .tdescs { flex: none; min-height: 196px; }
   .panel--moved { margin: 0 0 24px; }
   .tdet__body { padding-left: 0; }
   .tbtn { gap: 14px; }
