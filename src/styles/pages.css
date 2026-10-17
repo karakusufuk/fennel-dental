@@ -1,0 +1,24 @@
+/* Alt sayfalar — ana sayfa bileşenleri tekrar kullanılır; burada yalnız sayfa düzenleri. */
+
+body:has(.hdr--solid) { padding-top: 60px; }
+.hdr--solid { height: 60px; background: var(--zemin); border-bottom-color: var(--cizgi); }
+.mylink { font-family: var(--f-mono); font-size: 14px; line-height: 1.4; text-decoration: none; color: var(--murekkep); padding: 12px 4px; white-space: nowrap; }
+.mylink:hover { color: var(--kobalt); }
+@media (max-width: 1100px) { .mylink { display: none; } }
+
+.demo-band { border-bottom: 1px solid var(--cizgi); background: var(--zemin); font-family: var(--f-mono); font-size: 12px; line-height: 1.4; color: var(--ikincil); padding: 8px 0; }
+
+.page { min-height: 60vh; }
+.page > .sec:first-child { padding-top: 96px; }
+.phead { display: flex; flex-direction: column; gap: 24px; }
+.phead .intro { max-width: 62ch; }
+.back-link { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; }
+.stack { display: flex; flex-direction: column; gap: 24px; }
+.stack--lg { gap: 40px; }
+.link-k { color: var(--kobalt); }
+.link-k:hover { color: var(--murekkep); }
+.fixed-line { color: var(--ikincil); }
+
+@media (max-width: 760px) {
+  .page > .sec:first-child { padding-top: 56px; }
+}

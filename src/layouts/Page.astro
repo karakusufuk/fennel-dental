@@ -1,0 +1,21 @@
+---
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+
+interface Props { title: string; description: string; demo?: boolean }
+const { title, description, demo = false } = Astro.props;
+---
+<Base title={`${title} — Fennel Dental`} description={description}>
+  <Header solid />
+  {demo && <div class="demo-band"><span class="wrap">DEMO — no real appointments are made and no messages are sent.</span></div>}
+  <main class="page" id="main">
+    <slot />
+  </main>
+  <Footer />
+  <MobileBar />
+  <script>
+    import '../scripts/main';
+  </script>
+</Base>
