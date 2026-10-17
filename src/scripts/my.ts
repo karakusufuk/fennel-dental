@@ -1,6 +1,7 @@
-import { listBookings, sendCode, verifyCode, cancelBooking, joinWaitlist, phoneOk, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
+import { listBookings, sendCode, verifyCode, cancelBooking, phoneOk, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
 import { team } from '../data/team';
 import { esc, q, field } from './ui';
+import { mountNote, noteState } from './waitnote';
 
 const root = q('[data-my]')!;
 const S = { phone: '+353 ', code: '', demo: '', sent: false, verified: false, list: [] as Booking[], confirm: '' as string, err: {} as Record<string, string>, busy: false, joined: false, loading: false };
@@ -36,12 +37,13 @@ function list() {
     ? `<ul class="aprs">${up.map(row).join('')}</ul>`
     : '<p>No upcoming appointments.</p><div class="btnrow"><a class="btn btn--kobalt" href="/book/">Book a visit →</a></div>';
   return `<h2 class="q-h" id="my-h" tabindex="-1">${esc(maskPhone(S.phone))}</h2>${rows}
-    <div class="wait stack"><p>Want an earlier time? Join the waiting list and we'll text you if a slot opens up.</p>
-    ${S.joined ? `<p class="mono fixed-line">You're on the waiting list.</p>` : '<div class="btnrow"><button type="button" class="btn btn--yuzey" data-join>Join waiting list</button></div>'}</div>`;
+    <div class="wait" data-note-slot></div>`;
 }
 
 function render(focus = false) {
   root.innerHTML = S.verified ? list() : login();
+  const slot = q('[data-note-slot]', root);
+  if (slot) { if (noteState.phone.trim() === '+353') noteState.phone = S.phone; mountNote(slot, () => ({}), { toggle: false }); }
   if (focus) q('#my-h', root)?.focus();
 }
 
@@ -61,7 +63,6 @@ root.addEventListener('click', async (e) => {
   if (t.closest('[data-keep]')) { S.confirm = ''; render(); return; }
   const y = t.closest<HTMLElement>('[data-yes]');
   if (y) { await cancelBooking(y.dataset.yes!); S.confirm = ''; await refresh(); return; }
-  if (t.closest('[data-join]')) { await joinWaitlist({ phone: S.phone }); S.joined = true; render(); }
 });
 root.addEventListener('submit', async (e) => {
   e.preventDefault();

@@ -1,5 +1,5 @@
 import {
-  admin, getSettings, saveSettings, getWaitlist, simulateReply, getLog, resetDemo, onChange, availabilitySync, defaultSettings,
+  admin, getSettings, saveSettings, getWaitlist, simulateReply, setNoteCalled, getLog, resetDemo, onChange, availabilitySync, defaultSettings,
   today, addDays, parseISO, dow, toMin, fromMin, dayLabel, dentistRange, DAY_LONG, DAY_SHORT, TREATMENT_NAMES, TREATMENT_ORDER, CHAIRS,
   type Booking, type Settings,
 } from '../lib/booking';
@@ -22,7 +22,7 @@ const A = {
   mode: 'dentist' as 'dentist' | 'chair',
   weekStart: mondayOf(today()),
   selected: null as string | null,
-  drawer: null as null | { type: 'booking' | 'move' | 'new' | 'suggest'; id?: string; date?: string; time?: string; dentist?: string; chair?: number; err?: string; confirmCancel?: boolean },
+  drawer: null as null | { type: 'booking' | 'move' | 'new' | 'suggest'; id?: string; date?: string; time?: string; dentist?: string; chair?: number; err?: string; confirmCancel?: boolean; prefill?: { name: string; phone: string; treatment: string; dentist?: string }; noteId?: string },
   undo: null as null | { id: string; prev: { date: string; time: string; dentist: string; chair: number }; text: string },
   undoTimer: 0,
   allDentists: false,
@@ -179,12 +179,12 @@ function drawerHTML() {
         ${d.err ? `<p class="err">${esc(d.err)}</p>` : ''}
         <div class="rowact"><button type="submit" class="btn btn--kobalt btn--sm">${d.type === 'move' ? 'Move' : 'Send suggestion'}</button><button type="button" class="btn btn--yuzey btn--sm" data-back-b>Back</button></div></form>`;
   } else {
-    const dentV = d.dentist ?? team[0].slug;
+    const dentV = d.dentist ?? d.prefill?.dentist ?? team[0].slug;
     inner = `<div class="etiket">[ NEW APPOINTMENT ]</div><h2 class="sub-h" id="dr-h" tabindex="-1">${esc(dayLabel(d.date ?? A.date))}</h2>
       <form class="form" data-new-form novalidate>
-        <label class="fld"><span>Patient name</span><input name="name" required></label>
-        <label class="fld"><span>Phone</span><input name="phone" type="tel" value="+353 "></label>
-        <label class="fld"><span>Treatment</span><select name="treatment">${['examination', ...TREATMENT_ORDER].map((s) => `<option value="${s}">${esc(TREATMENT_NAMES[s])} (${getSettings().treatments[s].duration} min)</option>`).join('')}</select></label>
+        <label class="fld"><span>Patient name</span><input name="name" required value="${esc(d.prefill?.name ?? '')}"></label>
+        <label class="fld"><span>Phone</span><input name="phone" type="tel" value="${esc(d.prefill?.phone ?? '+353 ')}"></label>
+        <label class="fld"><span>Treatment</span><select name="treatment">${['examination', ...TREATMENT_ORDER].map((s) => `<option value="${s}" ${d.prefill?.treatment === s ? 'selected' : ''}>${esc(TREATMENT_NAMES[s])} (${getSettings().treatments[s].duration} min)</option>`).join('')}</select></label>
         <label class="fld"><span>Dentist</span><select name="dentist">${team.map((t) => `<option value="${t.slug}" ${dentV === t.slug ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</select></label>
         <label class="fld"><span>Time</span><select name="time">${timeOptions(d.time ?? '09:00')}</select></label>
         ${d.err ? `<p class="err">${esc(d.err)}</p>` : ''}
@@ -225,11 +225,16 @@ function requestsView() {
 function waitingView() {
   const w = getWaitlist();
   const rows = w.map((e) => {
+    if (e.kind === 'note') {
+      return `<li class="apr${e.called ? ' is-called' : ''}"><div class="apr__main req__main"><span><strong>${esc(e.name)}</strong><br><span class="mono">${esc(e.phone)}</span></span><span>${esc(e.treatment === 'any' ? 'Any treatment' : TREATMENT_NAMES[e.treatment] ?? e.treatment)}<br><span class="role-sm">${e.dentist ? esc(dentistName(e.dentist)) : 'Any dentist'}</span></span><span class="mono">${esc(new Date(e.createdAt).toISOString().replace('T', ' ').slice(0, 16))}</span><span class="mono apr__s">${e.called ? 'CALLED' : 'NOTE'}</span></div>
+        <p class="notetext">${esc(e.note ?? '')}</p>
+        <div class="rowact"><button type="button" class="btn btn--yuzey btn--sm" data-called="${e.id}" aria-pressed="${!!e.called}">${e.called ? 'Called ✓' : 'Called'}</button><button type="button" class="btn btn--kobalt btn--sm" data-book-note="${e.id}">Book…</button></div></li>`;
+    }
     const state = e.status === 'offered' && e.offer ? `Offered ${e.offer.time} ${DAY_SHORT[dow(e.offer.date)]} — waiting for reply` : e.status === 'waiting' ? 'Waiting' : e.status === 'accepted' ? 'Accepted' : 'Declined';
     return `<li class="apr"><div class="apr__main req__main"><span><strong>${esc(e.name)}</strong><br><span class="mono">${esc(e.phone)}</span></span><span>${esc(e.treatment === 'any' ? 'Any treatment' : TREATMENT_NAMES[e.treatment] ?? e.treatment)}<br><span class="role-sm">${esc(e.pref)}</span></span><span class="mono">${esc(new Date(e.createdAt).toISOString().slice(0, 10))}</span><span class="mono apr__s">${esc(state)}</span></div>
       ${e.status === 'offered' ? `<div class="rowact"><span class="fixed-line">Simulate reply:</span><button type="button" class="btn btn--kobalt btn--sm" data-reply="${e.id}" data-acc="1">Accept</button><button type="button" class="btn btn--yuzey btn--sm" data-reply="${e.id}" data-acc="0">Decline</button></div>` : ''}</li>`;
   }).join('');
-  return `<div class="adm__bar"><h1 class="adm__h">Waiting list</h1></div>${w.length ? `<ul class="aprs">${rows}</ul>` : '<p>Nobody is waiting.</p>'}<p class="fixed-line">When an appointment is cancelled, the first matching patient gets a text (demo).</p>`;
+  return `<div class="adm__bar"><h1 class="adm__h">Waiting list</h1></div>${w.length ? `<ul class="aprs">${rows}</ul>` : '<p>Nobody is waiting.</p>'}<p class="fixed-line">Slot offers go out by text (demo) to patients who joined the list. Patients who left a note are called by reception.</p>`;
 }
 
 /* ───────── Settings ───────── */
@@ -429,6 +434,14 @@ root.addEventListener('click', (e) => {
   const de = t.closest<HTMLElement>('[data-decline]');
   if (de) { A.declining = de.dataset.decline!; render(); return; }
   if (t.closest('[data-decl-no]')) { A.declining = ''; render(); return; }
+  const cl = t.closest<HTMLElement>('[data-called]');
+  if (cl) { const e = getWaitlist().find((x) => x.id === cl.dataset.called); setNoteCalled(cl.dataset.called!, !e?.called); render(); return; }
+  const bn = t.closest<HTMLElement>('[data-book-note]');
+  if (bn) {
+    const e = getWaitlist().find((x) => x.id === bn.dataset.bookNote)!;
+    A.drawer = { type: 'new', date: A.date, time: '09:00', noteId: e.id, prefill: { name: e.name, phone: e.phone, treatment: e.treatment === 'any' ? 'examination' : e.treatment, dentist: e.dentist } };
+    render(); q('#dr-h', root)?.focus(); return;
+  }
   const rp = t.closest<HTMLElement>('[data-reply]');
   if (rp) { simulateReply(rp.dataset.reply!, rp.dataset.acc === '1'); render(); return; }
   if (t.closest('[data-save]') && A.draft) { saveSettings(A.draft); A.dirty = false; A.draft = null; toast('Settings saved.'); return; }
@@ -468,6 +481,7 @@ root.addEventListener('submit', (e) => {
     if (!name) { A.drawer!.err = 'Enter a name.'; render(); return; }
     try {
       const b = admin.create({ treatment: String(fd.get('treatment')), dentist: String(fd.get('dentist')), date: A.drawer!.date ?? A.date, time: String(fd.get('time')), name, phone: String(fd.get('phone')), chair: A.drawer!.chair });
+      if (A.drawer!.noteId) setNoteCalled(A.drawer!.noteId, true);
       A.drawer = { type: 'booking', id: b.id }; A.selected = b.id; render();
     } catch { A.drawer!.err = 'That time is taken or outside working hours.'; render(); }
     return;

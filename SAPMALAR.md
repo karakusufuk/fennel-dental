@@ -65,3 +65,13 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - Admin Settings değişiklikleri yeni "tohumlu" günleri etkiler; zaten oluşmuş tohum randevular yeniden üretilmez (`Reset demo data` ile yenilenir).
 - Gerçek e-posta/SMS/sunucu yok; tüm veri tarayıcıda (`localStorage`).
 - Dış bağlantı `https://www.dentalcouncil.ie/` canlı kontrol edilmedi.
+
+## Ek istekler
+- **"All 8 treatments →"** ana sayfada listenin hemen altında, ink renkli düz link (hover'da kobalt), 44px; "Full fee list" ile aynı ölçüde (15px). Aynı yerde mobilde de.
+- **Contact:** header (masaüstü + mobil menü) "Clinic" → "Contact", `/clinic/`'e gider. **Footer'da önceden Clinic linki yoktu;** alt satıra `Contact` eklendi. `/clinic/` başlığı *Get in touch.*, etiket `[ CONTACT ]`, `<title>` "Contact". Üç buton açık zemine uyarlandı: `Call` koyu (ink) dolgu, `WhatsApp` ve e-posta 1px ink kenarlı (kobalt yok). WhatsApp linki hâlâ `#whatsapp` (numara yok). Form yok.
+- **Smooth scroll:** `smooth.ts`'e dokunulmadı; trackpad ayrımı hiç eklenmemişti (Aşama 0 notu), yani geri alınacak bir şey yok.
+- **"Can't find a time that works?":** `/book/` 3. adımda saat ızgarasının altında düz link; açılan alan belgedeki metinlerle, textarea 4 satır, `maxlength` yok, placeholder yok. SMS kodu istemez; tedavi ve hekim (`any` ise hekim yok) otomatik kayda eklenir. Yazılanlar sayfa yeniden çizilse de korunur. Gönderince alanın yerine *Thanks — we'll be in touch if a time opens up.*
+- **`addWaitingNote`** (booking.ts) bekleme listesine `kind: 'note'` kaydı yazar; otomatik SMS eşleşmesine (`offerSlot`) girmez.
+- **/my-appointments/** "Join waiting list" düğmesi kaldırıldı, aynı form (toggle'sız, açık) kullanılıyor. Eski `joinWaitlist` fonksiyonu booking.ts'te duruyor ama artık çağrılmıyor.
+- **Admin → Waiting list:** notlar ad, telefon, tedavi, hekim, tam not (satır sonları korunur), gönderilme zamanı ile; `Called` (aç/kapa) ve `Book…` (yeni randevu çekmecesi, ad/telefon/tedavi/hekim dolu; kaydedince not otomatik `Called` olur). Demo için tohumlu bir örnek not eklendi (uydurma ad). Reception bu notları görür (aramak için).
+- **Hata düzeltmesi:** not formu `submit` olayı üst sayfanın form işleyicisine sızıyordu (`stopPropagation` eklendi).

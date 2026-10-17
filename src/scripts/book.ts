@@ -5,6 +5,7 @@ import {
 } from '../lib/booking';
 import { team } from '../data/team';
 import { esc, q, qa, download, field } from './ui';
+import { mountNote, noteState } from './waitnote';
 
 interface StartResult { treatment: string; duration: number; mode: 'instant' | 'request'; title: string; consent: boolean; flags?: string[]; answers?: { q: string; a: string }[] }
 
@@ -168,6 +169,7 @@ function step3() {
   return `<h2 class="q-h" id="step-h" tabindex="-1">${S.resched ? 'Pick a new time.' : 'When?'}</h2>
     <div class="dayrow"><div class="days" role="group" aria-label="Days" data-days>${strip}</div>${arrows}</div>
     ${times}
+    <div data-note-slot></div>
     <div class="btnrow">${last}</div>
     ${S.errors.slot ? `<p class="err">${esc(S.errors.slot)}</p>` : ''}`;
 }
@@ -237,6 +239,12 @@ function render(focus = true) {
   root.innerHTML = `<div class="book__main" data-main>${sticky ? stepper() : ''}<div class="book__body" aria-live="polite">${body}</div></div>
     ${sticky ? `<div class="book__side">${summaryCard()}</div>` : ''}`;
   mountSumbar(sticky);
+  const slot = q('[data-note-slot]', root);
+  if (slot && S.step === 3 && S.days) {
+    if (!noteState.name) noteState.name = S.name;
+    if (noteState.phone.trim() === '+353' && S.phone.trim() !== '+353') noteState.phone = S.phone;
+    mountNote(slot, () => ({ treatment: S.treatment, dentist: S.dentist }), { toggle: true });
+  }
   if (focus) q('#step-h')?.focus({ preventScroll: false });
 }
 

@@ -358,3 +358,23 @@ body.has-sumbar .mbar { display: none; }
 .myapp { min-height: 420px; }
 .guided--page { min-height: 360px; }
 @media (max-width: 760px) { .book { min-height: 640px; } }
+
+/* Düz link (buton değil): ana sayfa "All 8 treatments →" */
+.plainlink { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: var(--murekkep); align-self: flex-start; }
+.plainlink:hover { color: var(--kobalt); }
+
+/* /clinic/ iletişim butonları (açık zemin) */
+.btn--ink { background: var(--murekkep); color: #fff; border-color: var(--murekkep); }
+.btn--ink:hover { background: #24313d; color: #fff; }
+.btn--outline { color: var(--murekkep); border-color: var(--murekkep); padding: 15px 21px; background: transparent; }
+.btn--outline:hover { background: var(--yuzey); color: var(--murekkep); }
+
+/* "Can't find a time that works?" */
+.notewrap { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.notebox { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--cizgi); padding-top: 20px; width: 100%; max-width: 520px; }
+.fld textarea { min-height: 7.2em; padding: 12px 16px; border: 1px solid var(--cizgi); border-radius: var(--kose); background: var(--yuzey); font: inherit; font-size: 17px; line-height: 1.5; color: var(--murekkep); resize: vertical; }
+.fld textarea:focus { outline: none; border-color: var(--kobalt); }
+.fld textarea:focus-visible { outline: 2px solid var(--kobalt); outline-offset: 2px; }
+.wait { margin-top: 32px; }
+.notetext { white-space: pre-wrap; max-width: 62ch; font-size: 15px; }
+.apr.is-called .notetext { color: var(--ikincil); }

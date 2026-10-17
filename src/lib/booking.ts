@@ -46,6 +46,11 @@ export interface WaitEntry {
   createdAt: number;
   status: 'waiting' | 'offered' | 'accepted' | 'declined';
   offer?: { date: string; time: string; dentist: string; treatment: string };
+  /** Serbest metin notu ('Can't find a time that works?'): otomatik SMS eşleşmesi yok, resepsiyon arar */
+  kind?: 'note';
+  dentist?: string;
+  note?: string;
+  called?: boolean;
 }
 
 export const CHAIRS = [1, 2, 3];
@@ -459,6 +464,7 @@ function defaultWait(): WaitEntry[] {
     { id: 'w-1', name: 'Eimear Collins', phone: '+353 8X XXX XXXX', treatment: 'check-up-and-clean', pref: 'Mornings', createdAt: Date.now() - 86400000 * 3, status: 'waiting' },
     { id: 'w-2', name: 'Barry Lynch', phone: '+353 8X XXX XXXX', treatment: 'fillings', pref: 'Any weekday', createdAt: Date.now() - 86400000 * 2, status: 'waiting' },
     { id: 'w-3', name: 'Orla Mahony', phone: '+353 8X XXX XXXX', treatment: 'any', pref: 'Afternoons', createdAt: Date.now() - 86400000, status: 'waiting' },
+    { id: 'w-4', kind: 'note', name: 'Fiona Healy', phone: '+353 8X XXX XXXX', treatment: 'fillings', dentist: 'aoife-murphy', pref: '', note: 'Weekday mornings before 10 work best.\nI can come at short notice.', createdAt: Date.now() - 3600000 * 5, status: 'waiting' },
   ];
 }
 export function getWaitlist(): WaitEntry[] { return load(KEYS.waitlist, defaultWait); }
@@ -470,10 +476,26 @@ export async function joinWaitlist(e: { name?: string; phone: string; treatment?
   saveWait(w);
   logEvent(`Waiting list: ${e.name || 'Patient'} joined`);
 }
+/** "Can't find a time that works?" notu: bekleme listesine yazılır (SMS kodu yok, otomatik eşleşme yok). */
+export async function addWaitingNote(e: { name: string; phone: string; treatment?: string; dentist?: string; note: string }) {
+  await wait();
+  const w = getWaitlist();
+  w.push({ id: `w-${Date.now().toString(36)}`, kind: 'note', name: e.name, phone: e.phone, treatment: e.treatment || 'any', dentist: e.dentist && e.dentist !== 'any' ? e.dentist : undefined, pref: '', note: e.note, createdAt: Date.now(), status: 'waiting' });
+  saveWait(w);
+  logEvent(`Waiting note: ${e.name}`);
+}
+export function setNoteCalled(id: string, called: boolean) {
+  const w = getWaitlist();
+  const e = w.find((x) => x.id === id);
+  if (!e) return;
+  e.called = called;
+  saveWait(w);
+  logEvent(`${e.name}: ${called ? 'called' : 'call mark removed'}`);
+}
 function offerSlot(b: { date: string; time: string; dentist: string; treatment: string }) {
   if (b.date < today() || (b.date === today() && toMin(b.time) <= nowMin())) return;
   const w = getWaitlist();
-  const e = w.find((x) => x.status === 'waiting' && (x.treatment === 'any' || x.treatment === b.treatment));
+  const e = w.find((x) => x.kind !== 'note' && x.status === 'waiting' && (x.treatment === 'any' || x.treatment === b.treatment));
   if (!e) return;
   e.status = 'offered';
   e.offer = { date: b.date, time: b.time, dentist: b.dentist, treatment: b.treatment };
