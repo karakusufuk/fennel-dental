@@ -1,4 +1,5 @@
 import { $, $$ } from './util';
+import { scrollToY } from './smooth';
 
 export function initTreatments() {
   const sec = $('[data-treat]');
@@ -53,6 +54,23 @@ export function initTreatments() {
     prog.style.width = `${((i + 1) / total) * 100}%`;
     progN.textContent = `${i + 1} / ${total}`;
     place();
+    reveal();
+  };
+
+  // Dar ekranda (görsel listenin içinde): görsel ekranda değilse önce oraya kay, sonra geçişi oynat.
+  let token = 0;
+  const reveal = async () => {
+    const my = ++token;
+    if (!narrow.matches) { play(); return; }
+    await new Promise((r) => setTimeout(r, 340)); // satır açılma geçişi (300ms) bitsin
+    if (my !== token) return;
+    const r = panel.getBoundingClientRect();
+    const top = 60 + 12;
+    const bottom = innerHeight - (phone.matches ? 77 : 0) - 12;
+    if (r.top < top || r.bottom > bottom) {
+      await scrollToY(r.top + scrollY - (60 + 16));
+      if (my !== token) return;
+    }
     play();
   };
 

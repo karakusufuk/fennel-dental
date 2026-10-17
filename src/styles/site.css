@@ -107,7 +107,7 @@ a:hover { color: var(--kobalt); }
 .strip [data-live] { transition: opacity 200ms; }
 
 /* ───────── Tedavi sahnesi ───────── */
-.treat { display: flex; flex-wrap: wrap; gap: var(--kolon-arasi); align-items: stretch; }
+.treat { display: flex; flex-wrap: wrap; gap: var(--kolon-arasi); align-items: flex-start; }
 .treat__list { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
 .tlist { margin-top: 16px; border-top: 1px solid var(--cizgi); }
 .tlist > li { border-bottom: 1px solid var(--cizgi); }
@@ -188,6 +188,12 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 .tdesc .tinfo dd { margin-top: 2px; font-size: 14px; }
 .tdesc .tlinks { gap: 20px; font-size: 14px; }
 .tdesc .tlinks a { min-height: 44px; }
+
+/* Masaüstü: görsel paneli sol liste kaydıkça ekranın üstünde takılı kalır (header 60 + 24px), bölümle birlikte çıkar */
+@media (min-width: 901px) {
+  .panel { position: sticky; top: 84px; align-self: flex-start; min-height: 0; height: min(760px, calc(100vh - 108px)); }
+  .panel .stage { flex: 1 1 0; min-height: 0; width: auto; max-width: 100%; align-self: center; margin: 0; }
+}
 
 /* ───────── Yönlendirme ───────── */
 .guided { max-width: 860px; display: flex; flex-direction: column; gap: 24px; }

@@ -9,6 +9,28 @@ import { reducedMotion } from './util';
 const AGIRLIK = 0.12;
 const ADIM = 0.75;
 
+let ctl: { go: (y: number) => Promise<void> } | null = null;
+
+/** Programatik kaydırma: ağır kaydırma açıksa onunla, değilse yerel yumuşak; reduced-motion'da anında. */
+export function scrollToY(y: number): Promise<void> {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  y = Math.max(0, Math.min(max, y));
+  if (reducedMotion()) { window.scrollTo(0, y); return Promise.resolve(); }
+  if (ctl) return ctl.go(y);
+  // Dokunmatik: kendi rAF geçişimiz (yerel smooth'a güvenme; süre ve bitiş belli olsun)
+  return new Promise((res) => {
+    const from = scrollY, dist = y - from, t0 = performance.now();
+    const dur = Math.min(700, 250 + Math.abs(dist) * 0.25);
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      window.scrollTo(0, from + dist * e);
+      if (k < 1) requestAnimationFrame(step); else res();
+    };
+    requestAnimationFrame(step);
+  });
+}
+
 export function initSmoothScroll() {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   if (!fine.matches || reducedMotion()) return;
@@ -18,14 +40,17 @@ export function initSmoothScroll() {
   let target = scrollY;
   let current = scrollY;
   let raf = 0;
+  const waiters: (() => void)[] = [];
 
   const tick = () => {
     current += (target - current) * AGIRLIK;
     if (Math.abs(target - current) < 0.4) current = target;
     window.scrollTo(0, current);
     raf = current === target ? 0 : requestAnimationFrame(tick);
+    if (!raf) waiters.splice(0).forEach((f) => f());
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  ctl = { go: (y) => new Promise((res) => { target = clamp(y); waiters.push(res); kick(); }) };
 
   window.addEventListener('wheel', (e) => {
     if (e.ctrlKey || e.defaultPrevented) return; // yakınlaştırma
