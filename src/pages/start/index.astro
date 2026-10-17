@@ -1,6 +1,15 @@
 ---
 import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
 ---
-<Page title="Guided start" description="Answer a few questions.">
-  <section class="sec wrap"><div class="phead"><div class="etiket">[ GUIDED START ]</div><h1 class="h-bolum">Guided start</h1></div></section>
+<Page title="Guided start" description="Answer a few questions. See your treatment, its time and its price range. Then pick a slot.">
+  <section class="sec wrap" aria-label="Guided start">
+    <PageHead label="GUIDED START" title="Know the plan before the chair." intro="Answer four questions. See your treatment, its time and its price range. Then pick a slot." />
+    <div class="guided guided--page" data-start style="margin-top:40px">
+      <noscript><p>This page needs JavaScript. You can <a href="/book/">book a visit</a> or call 01 555 0182.</p></noscript>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/start';
+  </script>
 </Page>

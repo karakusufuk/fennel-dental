@@ -17,3 +17,13 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - **Hero preload'ları yalnız ana sayfada** (alt sayfalarda gereksiz yük olmasın diye `head` slot'una taşındı).
 - **Yasal sayfalar:** bölüm başlıkları ben seçtim (Who we are, What we collect …); gövde `[LEGAL TEXT — to be supplied by the clinic]`.
 - **Header'daki `My appointments` linki 1100px altında gizli** (sığmıyor); footer'da her zaman var, mobilde menüde.
+
+## Aşama 3
+- **/start/ başlığı:** belge sayfa başlığı vermiyor; ana sayfa hero sloganı ve paragrafı kullanıldı (yeni metin icat edilmedi).
+- **Akış mantığı `src/lib/startflow.ts`'e ayrıldı** ve 170 yolun hepsi Node ile sayıldı (sonuç, süre, notlar, N): tutarsızlık yok.
+- **Bayraklar (`first-visit`, `anxious`, `smoker`, `urgent`) sağlık verisi sayıldı:** onay verilmezse hiçbiri /book/'a taşınmaz (belge "cevaplar taşınmaz, sadece tedavi + süre" diyor; bayraklar cevaplardan türediği için aynı kuralla). `urgent` da onaysız taşınmıyor; yani onaysız kullanıcıda en erken saat önceden seçilmez.
+- **"A little" cevabı** yalnız not ekler, bayrak eklemez (belge: "sadece not").
+- **Randevu butonu tedavi eşlemesi:** Pain/Gum/Repair → `examination` (anında onay), A1 → `whitening`, A2 → `braces-and-aligners`, A3 → `crowns-and-veneers`, Braces → `braces-and-aligners`, Missing → `implants`, Check-up → `check-up-and-clean`. Gerekçe: butonun anında/talep tipi tedavinin gerçek moduyla çelişmesin.
+- **Onay kutusu köşesi 4px** (20px kutuda 10px daire olurdu).
+- **Çocuk ortodonti sonucunda ikinci satır** "Clear aligners, if advised" / "Fixed braces, if advised" (belge: discreet/fine cevabı satır 2'yi değiştirir).
+- **Geri tuşu:** her ileri adım `pushState`; `← Back` da yeni kayıt ekler (tarayıcı geri tuşu bir önceki adıma döner).
