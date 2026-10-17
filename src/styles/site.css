@@ -187,7 +187,7 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 .tdesc .tinfo > div { padding: 6px 10px; }
 .tdesc .tinfo dd { margin-top: 2px; font-size: 14px; }
 .tdesc .tlinks { gap: 20px; font-size: 14px; }
-.tdesc .tlinks a { min-height: 40px; }
+.tdesc .tlinks a { min-height: 44px; }
 
 /* ───────── Yönlendirme ───────── */
 .guided { max-width: 860px; display: flex; flex-direction: column; gap: 24px; }
@@ -297,11 +297,11 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
   /* hover portresi yok: her satıra küçük portre */
   .team { display: block; }
   .team__side { display: none; }
-  .trow { grid-template-columns: 56px minmax(0, 1fr) auto; grid-template-areas: 'thumb name earl' 'thumb role role' 'thumb lang lang'; gap: 2px 16px; align-items: start; }
-  .trow > picture { display: contents; }
+  .trow { grid-template-columns: 56px minmax(0, 1fr); grid-template-areas: 'thumb name' 'thumb role' 'thumb lang' 'thumb earl'; gap: 2px 16px; align-items: start; }
   .trow .d-thumb { display: block; grid-area: thumb; width: 56px; height: 70px; border-radius: var(--kose); object-fit: cover; background: var(--portre-zemin); }
-  .trow .d-name { grid-area: name; }
-  .trow .d-earl { grid-area: earl; text-align: right; padding-top: 8px; }
+  .trow > picture { display: contents; }
+  .trow .d-name { grid-area: name; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .trow .d-earl { grid-area: earl; text-align: left; color: var(--ikincil); }
   .trow .d-role { grid-area: role; }
   .trow .d-lang { grid-area: lang; }
   .trow .d-dcr { display: none; }
@@ -334,21 +334,11 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
   .hero__low .wrap { gap: 16px; }
   .hero__btns { flex-direction: column; order: 1; }
   .hero__btns .btn { width: 100%; min-height: 52px; }
-  .hero__p { order: 2; font-size: 17px; max-width: none; }
-  .strip { display: none; }
+  .hero__p { order: 3; font-size: 17px; max-width: none; }
+  .strip { order: 2; font-size: 12px; max-width: 100%; white-space: nowrap; }
+  .strip > span { padding: 8px 10px; }
 
-  /* Tedavi sahnesi: sekmeler üstte, sahne ve açıklama aynı ekranda, yerleşim sabit */
-  .tlist { display: none; }
-  .treat__list { gap: 16px; }
   .treat__list .h-bolum { font-size: 36px; }
-  .tscene { display: flex; flex-direction: column; gap: 8px; height: calc(100svh - 60px - 77px - 12px); min-height: 540px; scroll-margin-top: 66px; margin-top: 8px; }
-  .tslotm { flex: 1 1 0; min-height: 0; display: flex; }
-  .tslotm .panel { flex: 1; min-height: 0; padding: 12px 12px 4px; gap: 4px; justify-content: flex-start; }
-  .tslotm .stage { flex: 1 1 0; min-height: 0; width: auto; max-width: 100%; align-self: center; margin: 0; }
-  .tslotm .panel__ctl { flex-direction: row; align-items: center; gap: 16px; }
-  .tslotm .replay { flex: none; align-self: auto; }
-  .tslotm .prog { flex: 1; }
-  .tdescs { flex: none; min-height: 196px; }
   .panel--moved { margin: 0 0 24px; }
   .tdet__body { padding-left: 0; }
   .tbtn { gap: 14px; }

@@ -30,11 +30,7 @@ export function initTreatments() {
 
   // Dar ekranda panel, aktif satırın açıklamasının altına taşınır
   const place = () => {
-    if (phone.matches) {
-      // Telefon: sekmeli sahne, panel sabit alanda
-      mslot.appendChild(panel);
-      panel.classList.remove('panel--moved');
-    } else if (narrow.matches) {
+    if (narrow.matches) {
       slots[cur].appendChild(panel);
       panel.classList.add('panel--moved');
     } else {
@@ -72,7 +68,6 @@ export function initTreatments() {
       tabs[n].focus();
     });
   });
-  phone.addEventListener('change', () => { place(); play(); });
   $('[data-replay]', sec)!.addEventListener('click', play);
   narrow.addEventListener('change', () => { place(); play(); });
   place();
