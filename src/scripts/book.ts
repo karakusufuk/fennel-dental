@@ -1,6 +1,6 @@
 import {
   treatmentsSync, getTreatments, dentistsSync, getAvailability, availabilitySync, earliest, createBooking, rescheduleBooking,
-  sendCode, verifyCode, phoneOk, maskPhone, toIcs, getBooking, getSettings, TREATMENT_NAMES, dayLabel, dow, DAY_LONG, DAY_SHORT, parseISO, addDays, today,
+  sendCode, verifyCode, phoneOk, phoneHint, maskPhone, toIcs, getBooking, getSettings, TREATMENT_NAMES, dayLabel, dow, DAY_LONG, DAY_SHORT, parseISO, addDays, today,
   type DaySlots, type Booking,
 } from '../lib/booking';
 import { team } from '../data/team';
@@ -20,8 +20,9 @@ interface State {
   phone: string;
   email: string;
   code: string;
-  demoCode: string;
   sent: boolean;
+  resendAt: number;
+  resent: boolean;
   days: DaySlots[] | null;
   page: number;
   start: StartResult | null;
@@ -35,8 +36,8 @@ interface State {
 const root = q('[data-book]')!;
 const params = new URLSearchParams(location.search);
 const S: State = {
-  step: 1, treatment: 'examination', dentist: 'any', date: '', time: '', name: '', phone: '+353 ', email: '', code: '', demoCode: '',
-  sent: false, days: null, page: 0, start: null, resched: null, errors: {}, done: null, busy: false, sumOpen: false,
+  step: 1, treatment: 'examination', dentist: 'any', date: '', time: '', name: '', phone: '+353 ', email: '', code: '',
+  sent: false, resendAt: 0, resent: false, days: null, page: 0, start: null, resched: null, errors: {}, done: null, busy: false, sumOpen: false,
 };
 let skipTo: 1 | 2 | 3 | 4 = 1;
 
@@ -184,11 +185,10 @@ function step4() {
       ${field('f-phone', 'Mobile number', { type: 'tel', value: S.phone, autocomplete: 'tel', error: e.phone })}
       ${field('f-email', 'Email (optional)', { type: 'email', value: S.email, autocomplete: 'email', hint: 'For a calendar invite and reminder.' })}
       ${consent ? `<p class="note-ro" data-consent-note>Your answers will be sent to your dentist. <button type="button" class="linkbtn2" data-remove-consent>Remove</button></p>` : ''}
-      <div class="fld">
-        <button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>${S.sent ? 'Resend code' : 'Send code'}</button>
-        ${S.demoCode ? `<p class="mono demo-code" data-demo-code>Demo code: ${esc(S.demoCode)}</p>` : ''}
-      </div>
-      ${field('f-code', '6-digit code', { value: S.code, autocomplete: 'one-time-code', inputmode: 'numeric', maxlength: 6, error: e.code })}
+      ${S.sent ? `<div class="fld"><p data-sent>We've sent a 6-digit code to ${esc(phoneHint(S.phone))}.</p>
+        <p class="resend"><button type="button" class="linkbtn2 link-k" data-resend ${Date.now() < S.resendAt ? 'disabled' : ''}>Resend code</button>${S.resent ? ' <span class="fixed-line" role="status">Code sent again.</span>' : ''}</p></div>`
+        : `<div class="fld"><button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>Send code</button></div>`}
+      ${S.sent ? field('f-code', '6-digit code', { value: S.code, autocomplete: 'one-time-code', inputmode: 'numeric', maxlength: 6, error: e.code }) : e.code ? `<p class="err">${esc(e.code)}</p>` : ''}
       <div class="btnrow"><button type="submit" class="btn btn--kobalt" ${S.busy ? 'disabled' : ''}>${t.mode === 'instant' ? 'Confirm booking →' : 'Send booking request →'}</button></div>
     </form>`;
 }
@@ -321,6 +321,7 @@ root.addEventListener('click', async (e) => {
     readForm(); render(false); return;
   }
   if (t.closest('[data-send]')) { await onSend(); return; }
+  if (t.closest('[data-resend]') && Date.now() >= S.resendAt) { await onSend(true); return; }
   if (t.closest('[data-resched]')) { await onResched(); return; }
   if (t.closest('[data-ics]') && S.done) { download('fennel-dental-appointment.ics', toIcs(S.done.booking)); }
 });
@@ -351,13 +352,18 @@ function readForm() {
   if (q('#f-name', root)) { S.name = g('f-name'); S.phone = g('f-phone'); S.email = g('f-email'); S.code = g('f-code'); }
 }
 
-async function onSend() {
+function startCooldown() {
+  S.resendAt = Date.now() + 30000;
+  setTimeout(() => { if (S.step === 4) render(false); }, 30100);
+}
+async function onSend(resend = false) {
   readForm();
   S.errors = {};
   if (!phoneOk(S.phone)) { S.errors.phone = 'Check the mobile number.'; render(false); q('#f-phone')?.focus(); return; }
   S.busy = true; render(false);
-  S.demoCode = await sendCode(S.phone);
-  S.sent = true; S.busy = false;
+  await sendCode(S.phone);
+  S.sent = true; S.busy = false; S.resent = resend;
+  startCooldown();
   render(false);
   q('#f-code')?.focus();
 }
@@ -367,7 +373,10 @@ async function onSubmit() {
   const e: Record<string, string> = {};
   if (!S.name.trim()) e.name = 'Enter your name.';
   if (!phoneOk(S.phone)) e.phone = 'Check the mobile number.';
-  if (!e.phone && !(S.sent && await verifyCode(S.phone, S.code))) e.code = "That code doesn't match. Try again or resend.";
+  if (!e.phone) {
+    if (!S.sent) e.code = 'Send the code to your phone first.';
+    else if (!(await verifyCode(S.phone, S.code))) e.code = 'Enter the 6-digit code.';
+  }
   S.errors = e;
   if (Object.keys(e).length) { render(false); q(`#f-${Object.keys(e)[0]}`)?.focus(); return; }
   S.busy = true; render(false);

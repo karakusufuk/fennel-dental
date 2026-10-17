@@ -342,22 +342,25 @@ export function earliest(dentist: string, treatment: string, duration?: number) 
   return nextSlots(dentist, treatment, 1, duration)[0] ?? null;
 }
 
-const codes: Record<string, string> = {};
 export const normPhone = (p: string) => p.replace(/\D/g, '').replace(/^353/, '').replace(/^0/, '');
 export const phoneOk = (p: string) => /^\d{8,10}$/.test(normPhone(p));
-export async function sendCode(phone: string): Promise<string> {
+/** "+353 •• ••• 4821": kod mesajında gösterilen maskeli numara (son 4 hane). */
+export const phoneHint = (p: string) => `+353 •• ••• ${normPhone(p).slice(-4)}`;
+/**
+ * SMS kodu gönder. DEMO: hiçbir şey gönderilmez ve kod hiçbir yerde gösterilmez.
+ * GERÇEK API: burada SMS sağlayıcısına istek atılır (kod sunucuda üretilir/saklanır).
+ */
+export async function sendCode(phone: string): Promise<void> {
   await wait();
-  const n = normPhone(phone);
-  let h = 7;
-  for (const c of n) h = (h * 31 + c.charCodeAt(0)) % 900000;
-  const code = String(100000 + h);
-  codes[n] = code;
   logEvent(`Code sent to ${maskPhone(phone)} (demo)`);
-  return code;
 }
-export async function verifyCode(phone: string, code: string) {
+/**
+ * Kodu doğrula. DEMO: yalnız biçim kontrolü (6 haneli rakam), herhangi bir kod kabul edilir.
+ * GERÇEK API: kod ve telefon sunucuya gönderilir, sunucu eşleştirir.
+ */
+export async function verifyCode(_phone: string, code: string) {
   await wait();
-  return codes[normPhone(phone)] === code.trim();
+  return /^\d{6}$/.test(code.trim());
 }
 export function maskPhone(p: string) {
   const n = normPhone(p);

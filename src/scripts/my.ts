@@ -1,17 +1,17 @@
-import { listBookings, sendCode, verifyCode, cancelBooking, phoneOk, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
+import { listBookings, sendCode, verifyCode, cancelBooking, phoneOk, phoneHint, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
 import { team } from '../data/team';
 import { esc, q, field } from './ui';
 import { mountNote, noteState } from './waitnote';
 
 const root = q('[data-my]')!;
-const S = { phone: '+353 ', code: '', demo: '', sent: false, verified: false, list: [] as Booking[], confirm: '' as string, err: {} as Record<string, string>, busy: false, joined: false, loading: false };
+const S = { phone: '+353 ', code: '', resendAt: 0, resent: false, sent: false, verified: false, list: [] as Booking[], confirm: '' as string, err: {} as Record<string, string>, busy: false, joined: false, loading: false };
 
 function login() {
   return `<form class="form" data-form novalidate>
     <h2 class="q-h" id="my-h" tabindex="-1">Mobile number</h2>
     ${field('m-phone', 'Mobile number', { type: 'tel', value: S.phone, autocomplete: 'tel', error: S.err.phone })}
-    <div class="fld"><button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>${S.sent ? 'Resend code' : 'Send code'}</button>
-      ${S.demo ? `<p class="mono demo-code">Demo code: ${esc(S.demo)}</p>` : ''}</div>
+    ${S.sent ? `<div class="fld"><p>We've sent a 6-digit code to ${esc(phoneHint(S.phone))}.</p><p class="resend"><button type="button" class="linkbtn2 link-k" data-resend ${Date.now() < S.resendAt ? 'disabled' : ''}>Resend code</button>${S.resent ? ' <span class="fixed-line" role="status">Code sent again.</span>' : ''}</p></div>`
+      : `<div class="fld"><button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>Send code</button></div>`}
     ${S.sent ? field('m-code', '6-digit code', { value: S.code, autocomplete: 'one-time-code', inputmode: 'numeric', maxlength: 6, error: S.err.code }) : ''}
     ${S.sent ? '<div class="btnrow"><button type="submit" class="btn btn--kobalt">Show my appointments →</button></div>' : ''}
   </form>`;
@@ -51,12 +51,15 @@ async function refresh() { S.list = await listBookings(S.phone); render(); }
 
 root.addEventListener('click', async (e) => {
   const t = e.target as HTMLElement;
-  if (t.closest('[data-send]')) {
+  if (t.closest('[data-send]') || (t.closest('[data-resend]') && Date.now() >= S.resendAt)) {
+    const again = !!t.closest('[data-resend]');
     S.phone = q<HTMLInputElement>('#m-phone', root)?.value ?? S.phone;
     S.err = {};
     if (!phoneOk(S.phone)) { S.err.phone = 'Check the mobile number.'; render(); q('#m-phone', root)?.focus(); return; }
     S.busy = true; render();
-    S.demo = await sendCode(S.phone); S.sent = true; S.busy = false; render(); q('#m-code', root)?.focus(); return;
+    await sendCode(S.phone); S.sent = true; S.busy = false; S.resent = again;
+    S.resendAt = Date.now() + 30000; setTimeout(() => { if (!S.verified) render(); }, 30100);
+    render(); q('#m-code', root)?.focus(); return;
   }
   const c = t.closest<HTMLElement>('[data-cancel]');
   if (c) { S.confirm = c.dataset.cancel!; render(); return; }
@@ -70,7 +73,8 @@ root.addEventListener('submit', async (e) => {
   S.code = q<HTMLInputElement>('#m-code', root)?.value ?? '';
   S.err = {};
   if (!phoneOk(S.phone)) { S.err.phone = 'Check the mobile number.'; render(); return; }
-  if (!(await verifyCode(S.phone, S.code))) { S.err.code = "That code doesn't match. Try again or resend."; render(); q('#m-code', root)?.focus(); return; }
+  if (!S.sent) { S.err.code = 'Send the code to your phone first.'; render(); return; }
+  if (!(await verifyCode(S.phone, S.code))) { S.err.code = 'Enter the 6-digit code.'; render(); q('#m-code', root)?.focus(); return; }
   S.verified = true;
   S.list = await listBookings(S.phone);
   render(true);

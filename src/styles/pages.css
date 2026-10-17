@@ -378,3 +378,6 @@ body.has-sumbar .mbar { display: none; }
 .wait { margin-top: 32px; }
 .notetext { white-space: pre-wrap; max-width: 62ch; font-size: 15px; }
 .apr.is-called .notetext { color: var(--ikincil); }
+
+.resend { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.linkbtn2:disabled { opacity: 0.5; cursor: default; }
