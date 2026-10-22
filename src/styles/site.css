@@ -401,7 +401,7 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 @media (max-width: 760px) {
   .cm { align-items: flex-end; padding: 0; }
   .cm__sheet { max-width: none; border-radius: var(--kose) var(--kose) 0 0; padding: 28px 24px calc(24px + env(safe-area-inset-bottom)); transform: translateY(100%); opacity: 1; }
-  .cm__act { flex-direction: column-reverse; }
+  .cm__act { flex-direction: column; }
   .cm__act .btn { width: 100%; min-height: 52px; }
 }
 @media (prefers-reduced-motion: reduce) {
