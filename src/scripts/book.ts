@@ -189,10 +189,6 @@ function step4() {
       ${field('f-phone', 'Mobile number', { type: 'tel', value: S.phone, autocomplete: 'tel', error: e.phone })}
       ${field('f-email', 'Email (optional)', { type: 'email', value: S.email, autocomplete: 'email', hint: 'For a calendar invite and reminder.' })}
       ${consent ? `<p class="note-ro" data-consent-note>Your answers will be sent to your dentist. <button type="button" class="linkbtn2" data-remove-consent>Remove</button></p>` : ''}
-      ${S.sent ? `<div class="fld"><p data-sent>We've sent a 6-digit code to ${esc(phoneHint(S.phone))}.</p>
-        <p class="resend"><button type="button" class="linkbtn2 link-k" data-resend ${Date.now() < S.resendAt ? 'disabled' : ''}>Resend code</button>${S.resent ? ' <span class="fixed-line" role="status">Code sent again.</span>' : ''}</p></div>`
-        : `<div class="fld"><button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>Send code</button></div>`}
-      ${S.sent ? field('f-code', '6-digit code', { value: S.code, autocomplete: 'one-time-code', inputmode: 'numeric', maxlength: 6, error: e.code }) : e.code ? `<p class="err">${esc(e.code)}</p>` : ''}
       <div class="btnrow"><button type="submit" class="btn btn--kobalt" ${S.busy ? 'disabled' : ''}>${t.mode === 'instant' ? 'Confirm booking →' : 'Send booking request →'}</button></div>
     </form>`;
 }
@@ -380,10 +376,6 @@ async function onSubmit() {
   const e: Record<string, string> = {};
   if (!S.name.trim()) e.name = 'Enter your name.';
   if (!phoneOk(S.phone)) e.phone = 'Check the mobile number.';
-  if (!e.phone) {
-    if (!S.sent) e.code = 'Send the code to your phone first.';
-    else if (!(await verifyCode(S.phone, S.code))) e.code = 'Enter the 6-digit code.';
-  }
   S.errors = e;
   if (Object.keys(e).length) { render(false); q(`#f-${Object.keys(e)[0]}`)?.focus(); return; }
   S.busy = true; render(false);

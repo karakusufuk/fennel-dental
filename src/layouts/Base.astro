@@ -14,7 +14,7 @@ const { title = 'Fennel Dental — Home', description = 'See your treatment, its
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#F3F4F2" />
     <link rel="preload" href="/fonts/bricolage-grotesque-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/geist-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -25,5 +25,6 @@ const { title = 'Fennel Dental — Home', description = 'See your treatment, its
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
-  </body>
+    <p style="margin:0;padding:10px 16px;text-align:center;font:12px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.02em;background:#111;color:#c9c9c9">Portfolio demo, not a real business. Case study by Ufuk.</p>
+</body>
 </html>

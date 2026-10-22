@@ -10,10 +10,7 @@ function login() {
   return `<form class="form" data-form novalidate>
     <h2 class="q-h" id="my-h" tabindex="-1">Mobile number</h2>
     ${field('m-phone', 'Mobile number', { type: 'tel', value: S.phone, autocomplete: 'tel', error: S.err.phone })}
-    ${S.sent ? `<div class="fld"><p>We've sent a 6-digit code to ${esc(phoneHint(S.phone))}.</p><p class="resend"><button type="button" class="linkbtn2 link-k" data-resend ${Date.now() < S.resendAt ? 'disabled' : ''}>Resend code</button>${S.resent ? ' <span class="fixed-line" role="status">Code sent again.</span>' : ''}</p></div>`
-      : `<div class="fld"><button type="button" class="btn btn--yuzey" data-send ${S.busy ? 'disabled' : ''}>Send code</button></div>`}
-    ${S.sent ? field('m-code', '6-digit code', { value: S.code, autocomplete: 'one-time-code', inputmode: 'numeric', maxlength: 6, error: S.err.code }) : ''}
-    ${S.sent ? '<div class="btnrow"><button type="submit" class="btn btn--kobalt">Show my appointments →</button></div>' : ''}
+    <div class="btnrow"><button type="submit" class="btn btn--kobalt">Show my appointments →</button></div>
   </form>`;
 }
 
@@ -73,8 +70,6 @@ root.addEventListener('submit', async (e) => {
   S.code = q<HTMLInputElement>('#m-code', root)?.value ?? '';
   S.err = {};
   if (!phoneOk(S.phone)) { S.err.phone = 'Check the mobile number.'; render(); return; }
-  if (!S.sent) { S.err.code = 'Send the code to your phone first.'; render(); return; }
-  if (!(await verifyCode(S.phone, S.code))) { S.err.code = 'Enter the 6-digit code.'; render(); q('#m-code', root)?.focus(); return; }
   S.verified = true;
   S.list = await listBookings(S.phone);
   render(true);
