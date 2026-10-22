@@ -9,7 +9,6 @@ const { title, description, demo = false, footer = 'full' } = Astro.props;
 ---
 <Base title={`${title} — Fennel Dental`} description={description}>
   <Header solid />
-  {demo && <div class="demo-band"><span class="wrap">DEMO — no real appointments are made and no messages are sent.</span></div>}
   <main class="page" id="main">
     <slot />
   </main>
