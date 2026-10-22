@@ -1,0 +1,15 @@
+---
+import { CASE_STUDY_URL } from '../config';
+---
+<div class="cm" data-concept-modal hidden>
+  <div class="cm__backdrop" data-cm-close></div>
+  <div class="cm__sheet" role="dialog" aria-modal="true" aria-labelledby="cm-title" aria-describedby="cm-body" tabindex="-1">
+    <div class="etiket">Concept site</div>
+    <h2 class="cm__t" id="cm-title">Concept site by Ufuk Karakuş</h2>
+    <p class="cm__b" id="cm-body" data-cm-body></p>
+    <div class="cm__act">
+      <a class="btn btn--kobalt" href={CASE_STUDY_URL} target="_blank" rel="noopener">See how it works →</a>
+      <button type="button" class="btn btn--yuzey" data-cm-close>Close</button>
+    </div>
+  </div>
+</div>

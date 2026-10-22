@@ -1,3 +1,4 @@
+import { showConcept } from './concept-modal';
 import {
   treatmentsSync, getTreatments, dentistsSync, getAvailability, availabilitySync, earliest, createBooking, rescheduleBooking,
   sendCode, verifyCode, phoneOk, phoneHint, maskPhone, toIcs, getBooking, getSettings, TREATMENT_NAMES, dayLabel, dow, DAY_LONG, DAY_SHORT, parseISO, addDays, today,
@@ -159,7 +160,7 @@ function step3() {
   }).join('');
   const cur = days.find((d) => d.date === S.date);
   let times = '';
-  if (!open.length) times = '<p>No free times in the next two weeks. Call 01 555 0182 and we\'ll book you by phone.</p>';
+  if (!open.length) times = '<p>No free times in the next two weeks. Call 01 234 5018 and we\'ll book you by phone.</p>';
   else if (!cur) times = '<p class="fixed-line">Pick a day to see the free times.</p>';
   else if (!cur.slots.length) {
     const next = days.find((d) => d.date > S.date && d.slots.length);
@@ -378,6 +379,7 @@ async function onSubmit() {
   if (!phoneOk(S.phone)) e.phone = 'Check the mobile number.';
   S.errors = e;
   if (Object.keys(e).length) { render(false); q(`#f-${Object.keys(e)[0]}`)?.focus(); return; }
+  await showConcept('booking');
   S.busy = true; render(false);
   try {
     const consent = !!S.start?.consent;
@@ -403,6 +405,7 @@ async function onSubmit() {
 
 async function onResched() {
   if (!S.resched || !S.date || !S.time) return;
+  await showConcept('reschedule');
   try {
     const b = await rescheduleBooking(S.resched, { date: S.date, time: S.time, dentist: S.dentist === 'any' ? undefined : S.dentist });
     S.done = { booking: b, status: b.status, moved: true };

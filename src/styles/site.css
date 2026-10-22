@@ -386,3 +386,29 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
   .stage.is-done { transform: none; }
   .tdet, .tdet.is-open { transition-duration: 1ms !important; }
 }
+
+/* ───────── Konsept modalı ───────── */
+.cm-lock { overflow: hidden; }
+.cm { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.cm[hidden] { display: none; }
+.cm__backdrop { position: absolute; inset: 0; background: rgba(15, 26, 36, 0.55); opacity: 0; transition: opacity 300ms var(--ease-giris); }
+.cm__sheet { position: relative; width: 100%; max-width: 520px; background: var(--yuzey); color: var(--murekkep); border-radius: var(--kose); padding: 36px; display: flex; flex-direction: column; gap: 14px; outline: none; opacity: 0; transform: translateY(16px); transition: opacity 400ms var(--ease-giris), transform 400ms var(--ease-giris); }
+.cm.is-open .cm__backdrop { opacity: 1; }
+.cm.is-open .cm__sheet { opacity: 1; transform: none; }
+.cm__t { font-family: var(--f-baslik); font-weight: 600; font-size: var(--kart-boyut); line-height: 1.1; letter-spacing: -0.03em; }
+.cm__b { font-size: var(--govde-boyut); line-height: 1.6; color: var(--ikincil); }
+.cm__act { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+@media (max-width: 760px) {
+  .cm { align-items: flex-end; padding: 0; }
+  .cm__sheet { max-width: none; border-radius: var(--kose) var(--kose) 0 0; padding: 28px 24px calc(24px + env(safe-area-inset-bottom)); transform: translateY(100%); opacity: 1; }
+  .cm__act { flex-direction: column-reverse; }
+  .cm__act .btn { width: 100%; min-height: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cm__backdrop, .cm__sheet { transition: none; }
+  .cm__sheet { transform: none; }
+}
+
+/* Sayfa sonu: footer'ın altındaki sade imza */
+.sig { background: var(--koyu); color: var(--koyu-ikincil); border-top: 1px solid var(--koyu-cizgi); font-size: 14px; }
+.sig__in { max-width: var(--max); margin: 0 auto; padding: 16px var(--kenar); display: flex; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }

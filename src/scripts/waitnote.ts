@@ -1,5 +1,6 @@
 import { addWaitingNote, phoneOk } from '../lib/booking';
 import { esc } from './ui';
+import { showConcept } from './concept-modal';
 
 /**
  * "Can't find a time that works?" — saat bulamayan hasta için serbest not.
@@ -53,6 +54,7 @@ export function mountNote(el: HTMLElement, ctx: () => Ctx, opts: Opts) {
     if (!s.name.trim()) s.err.name = 'Enter your name.';
     if (!phoneOk(s.phone)) s.err.phone = 'Check the mobile number.';
     if (Object.keys(s.err).length) { draw(); el.querySelector<HTMLElement>(`#n-${Object.keys(s.err)[0]}`)?.focus(); return; }
+    await showConcept('waitlist');
     s.busy = true; draw();
     const c = ctx();
     await addWaitingNote({ name: s.name.trim(), phone: s.phone, treatment: c.treatment, dentist: c.dentist, note: s.text });

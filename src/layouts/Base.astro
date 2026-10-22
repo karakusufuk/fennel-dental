@@ -3,6 +3,7 @@ import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/site.css';
 import '../styles/pages.css';
+import ConceptModal from '../components/ConceptModal.astro';
 
 interface Props { title?: string; description?: string; noindex?: boolean }
 const { title = 'Fennel Dental — Home', description = 'See your treatment, its time and its price range before you book.', noindex = false } = Astro.props;
@@ -25,6 +26,11 @@ const { title = 'Fennel Dental — Home', description = 'See your treatment, its
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
-    <p style="margin:0;padding:10px 16px;text-align:center;font:12px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.02em;background:#111;color:#c9c9c9">Portfolio demo, not a real business. Case study by Ufuk.</p>
+    <ConceptModal />
+    <div class="sig"><div class="sig__in"><span>Portfolio demo, not a real business.</span><span>Designed by Ufuk Karakuş</span></div></div>
+    <script>
+      import { initConceptModal } from '../scripts/concept-modal';
+      initConceptModal();
+    </script>
 </body>
 </html>

@@ -45,7 +45,7 @@ function init(root: HTMLElement) {
       return `<div class="gcard gcard--call on-dark">
         <div class="etiket">Don't wait for a slot</div>
         <div class="gcard__t">Call us now. Swelling or fever needs to be seen today.</div>
-        <a class="btn btn--beyaz" style="align-self:flex-start" href="tel:+35315550182">Call 01 555 0182 →</a>
+        <a class="btn btn--beyaz" style="align-self:flex-start" href="tel:+35312345018">Call 01 234 5018 →</a>
         <p class="gcard__fixed">If swelling is affecting your breathing or swallowing, go to an Emergency Department or call 112.</p>
         <div class="gcard__act"><button type="button" class="linkbtn" data-restart>Start again</button></div></div>`;
     }
