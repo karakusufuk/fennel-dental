@@ -445,3 +445,6 @@ html:not(.js) .after { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 /* Sayfa sonu: footer'ın altındaki sade imza */
 .sig { background: var(--koyu); color: var(--koyu-ikincil); border-top: 1px solid var(--koyu-cizgi); font-size: 14px; }
 .sig__in { max-width: var(--max); margin: 0 auto; padding: 16px var(--kenar); display: flex; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+
+/* tablet and phone: facts labels at 12px */
+@media (max-width: 1100px) { .tinfo dt { font-size: 12px; } }
