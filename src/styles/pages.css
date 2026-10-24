@@ -228,7 +228,12 @@ body.has-sumbar .mbar { display: none; }
   .sumbar__btn span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sumbar__panel { display: none; padding: 16px var(--kenar) 0; }
   .sumbar.is-open .sumbar__panel { display: block; }
-  body.has-sumbar { padding-bottom: 64px; }
+  /* özet çubuğu sabit kalır: boşluk koyu imzanın içinde, açık şerit kalmaz */
+  body.has-sumbar { padding-bottom: 0; }
+  html:has(body.has-sumbar) { scroll-padding-bottom: 72px; } /* odaklanan alan özet çubuğunun altında kalmasın */
+  body.has-sumbar .sig { padding-bottom: calc(57px + env(safe-area-inset-bottom)); }
+  .sumbar__panel { max-height: calc(100dvh - 140px); overflow-y: auto; overscroll-behavior: contain; }
+  .cmp { touch-action: pan-y; } /* dikey kaydırma sayfayı kaydırır, yatay sürükleme kaydırıcıyı */
 }
 @media (max-width: 760px) {
   .days { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 6px; }
@@ -240,6 +245,24 @@ body.has-sumbar .mbar { display: none; }
   .apr__when { grid-area: when; } .apr__s { grid-area: s; text-align: right; } .apr__t { grid-area: t; } .apr__d { grid-area: d; }
   .opt--row { flex-direction: column; align-items: flex-start; gap: 4px; }
   .opt--dentist { padding: 10px 16px; }
+  .stepper { justify-content: space-between; gap: 0 12px; }
+  .stp { font-size: 14px; }
+  .btnrow > .btn { flex: 1 1 100%; }
+  .rolebtns .btn { flex: 1 1 100%; }
+
+  /* Ücret tabloları: satır başına ad üstte, "From / To" altında etiketli; yana kaydırma yok */
+  .page .feewrap { overflow-x: visible; }
+  .page .feetable, .page .feetable tbody { display: block; width: 100%; min-width: 0; }
+  .page .feetable caption { display: block; }
+  .page .feetable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .page .feetable tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px 16px; padding: 14px 0; border-top: 1px solid var(--cizgi); }
+  .page .feetable tbody tr:last-child { border-bottom: 1px solid var(--cizgi); }
+  .page .feetable tbody th, .page .feetable tbody td, .page .feetable tbody tr:last-child th, .page .feetable tbody tr:last-child td { border: 0; padding: 0; }
+  .page .feetable tbody th { grid-column: 1 / -1; }
+  .page .feetable .num { text-align: left; padding-left: 0; font-size: 15px; }
+  .page .feetable td[data-min]::before, .page .feetable td[data-max]::before { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ikincil); margin-right: 8px; }
+  .page .feetable td[data-min]::before { content: 'From'; }
+  .page .feetable td[data-max]::before { content: 'To'; }
 }
 @media (min-width: 761px) { .day.is-off { display: none; } }
 
@@ -302,6 +325,7 @@ body.has-sumbar .mbar { display: none; }
 .gnow { position: absolute; left: 0; right: 0; height: 1px; background: var(--kobalt); z-index: 1; pointer-events: none; }
 .adm__hint { font-size: 14px; }
 .mlist { display: none; }
+.wday { display: none; } /* hafta tablosu: gün etiketi yalnız mobilde (başlık satırı gizlenince) */
 
 /* Çekmece */
 .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100vw); background: var(--zemin); border-left: 1px solid var(--cizgi); z-index: 80; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
@@ -334,12 +358,48 @@ body.has-sumbar .mbar { display: none; }
 .savebar span { margin-right: auto; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-@media (max-width: 760px) {
-  .adm__body { grid-template-columns: minmax(0, 1fr); }
+/* Tablet + mobil panel: sol menü üstte yatay sekme şeridi olur, takvime tam genişlik kalır */
+@media (max-width: 1100px) {
+  .adm__body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
   .adm__nav { border-right: 0; border-bottom: 1px solid var(--cizgi); padding: 0; overflow-x: auto; }
   .adm__nav ul { flex-direction: row; }
-  .adm__l { white-space: nowrap; padding: 0 16px; }
+  .adm__l { white-space: nowrap; padding: 0 16px; gap: 8px; }
+}
+@media (max-width: 900px) {
+  /* dar sütunda hekim adı + uzmanlık iki satıra iner: başlık (saat sütunu dahil) aynı yükseklikte büyür */
+  .gcol__h { height: 80px; align-items: flex-start; font-size: 13px; line-height: 1.25; }
+  .gcol__h .role-sm { font-size: 13px; }
+}
+@media (max-width: 760px) {
   .adm__main { padding: 16px var(--kenar); }
+  .rolepick { padding-top: 56px; padding-bottom: 56px; }
+
+  /* Panel tabloları: yana kaydırma yok, satırlar istiflenir */
+  .adm .feewrap { overflow-x: visible; }
+  .adm .feetable { min-width: 0; }
+  .adm .wtable, .adm .wtable tbody, .adm .hset, .adm .hset tbody, .adm .tset, .adm .tset tbody { display: block; width: 100%; }
+  .adm .wtable thead, .adm .tset thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .adm .wtable tbody tr, .adm .hset tbody tr, .adm .tset tbody tr { display: grid; gap: 8px 12px; padding: 14px 0; border-top: 1px solid var(--cizgi); align-items: center; }
+  .adm .wtable tbody tr:last-child, .adm .hset tbody tr:last-child, .adm .tset tbody tr:last-child { border-bottom: 1px solid var(--cizgi); }
+  .adm .wtable :is(th, td), .adm .hset :is(th, td), .adm .tset :is(th, td) { border: 0 !important; padding: 0; }
+  .adm .wtable tbody th, .adm .hset tbody th, .adm .tset tbody th { grid-column: 1 / -1; font-weight: 500; }
+  .adm .wtable tbody tr { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .wday { display: block; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ikincil); }
+  .wcell { padding: 6px 0; }
+  .adm .hset tbody tr { grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); }
+  .adm .hset select { width: 100%; }
+  .adm .tset tbody tr { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+  .adm .tset td::before { display: block; margin-bottom: 4px; font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ikincil); }
+  .adm .tset td:nth-of-type(1)::before { content: 'Duration'; }
+  .adm .tset td:nth-of-type(2)::before { content: 'Mode'; }
+  .adm .tset td:nth-of-type(3)::before { content: 'Lowest fee'; }
+  .adm .tset td:nth-of-type(4)::before { content: 'Highest fee'; }
+  .adm .tset select, .adm .tset .fee-in { width: 100%; min-height: 44px; font-size: 16px; }
+  .adm .rset th, .adm .rset td { padding-right: 12px; vertical-align: top; }
+  .adm select, .adm .fld input[type="date"], .drawer textarea, .drawer .fld input { font-size: 16px; }
+  .dnav .arrow { flex: none; }
+  .savebar { flex-wrap: wrap; }
+  .savebar .btn { white-space: nowrap; }
   .grid, .adm__hint { display: none; }
   .mlist { display: flex; flex-direction: column; gap: 12px; }
   .mtabs { display: flex; gap: 8px; flex-wrap: wrap; }

@@ -199,7 +199,7 @@ function weekView() {
   const head = `<div class="adm__bar"><div class="dnav"><button type="button" class="arrow" data-wk="-7" aria-label="Previous week">←</button><h1 class="adm__h">Week of ${esc(dayLabel(A.weekStart))}</h1><button type="button" class="arrow" data-wk="7" aria-label="Next week">→</button></div></div>`;
   const rows = team.map((d) => `<tr><th scope="row">${esc(d.name)}</th>${w.days.map((day) => {
     const c = w.cells[day][d.slug];
-    return `<td><button type="button" class="wcell" data-wd="${day}" ${c.avail ? '' : 'disabled'}><span class="mono">${c.avail ? `${c.pct}%` : '—'}</span><span class="wbar"><i style="width:${c.pct}%"></i></span></button></td>`;
+    return `<td><button type="button" class="wcell" data-wd="${day}" ${c.avail ? '' : 'disabled'}><span class="wday mono" aria-hidden="true">${DAY_SHORT[dow(day)]} ${parseISO(day).getDate()}</span><span class="mono">${c.avail ? `${c.pct}%` : '—'}</span><span class="wbar"><i style="width:${c.pct}%"></i></span></button></td>`;
   }).join('')}</tr>`).join('');
   return head + `<div class="feewrap"><table class="feetable wtable"><caption class="sr-only">Occupancy by dentist and day</caption><thead><tr><th scope="col">Dentist</th>${w.days.map((d) => `<th scope="col" class="num">${DAY_SHORT[dow(d)]} ${parseISO(d).getDate()}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>
     <dl class="totals"><div><dt>Appointments</dt><dd class="mono">${w.count}</dd></div><div><dt>Free hours</dt><dd class="mono">${w.freeHours}</dd></div><div><dt>Cancelled</dt><dd class="mono">${w.cancelled}</dd></div></dl>`;
@@ -260,11 +260,11 @@ function settingsView() {
       <td><label class="chkl"><input type="checkbox" role="switch" data-tmode="${sl}" ${t.mode === 'instant' ? 'checked' : ''}> ${t.mode === 'instant' ? 'Instant' : 'Request'}</label></td>
       <td><input class="fee-in mono" data-tmin="${sl}" value="${esc(t.min)}" aria-label="Lowest fee"></td><td><input class="fee-in mono" data-tmax="${sl}" value="${esc(t.max)}" aria-label="Highest fee"></td></tr>`;
   }).join('');
-  const roles = '<table class="feetable"><thead><tr><th>Role</th><th>Can do</th></tr></thead><tbody><tr><th scope="row">Reception</th><td>Calendar, create/move/cancel, requests, waiting list. Cannot see patient answers.</td></tr><tr><th scope="row">Dentist</th><td>Own column, own patients’ summary and answers (if the patient agreed).</td></tr><tr><th scope="row">Owner</th><td>Everything, settings, week view, activity.</td></tr></tbody></table>';
+  const roles = '<table class="feetable rset"><thead><tr><th>Role</th><th>Can do</th></tr></thead><tbody><tr><th scope="row">Reception</th><td>Calendar, create/move/cancel, requests, waiting list. Cannot see patient answers.</td></tr><tr><th scope="row">Dentist</th><td>Own column, own patients’ summary and answers (if the patient agreed).</td></tr><tr><th scope="row">Owner</th><td>Everything, settings, week view, activity.</td></tr></tbody></table>';
   return `<div class="adm__bar"><h1 class="adm__h">Settings</h1></div>
-    <section class="set"><h2 class="sub-h">Opening hours</h2><div class="feewrap"><table class="feetable"><tbody>${hours}</tbody></table></div></section>
+    <section class="set"><h2 class="sub-h">Opening hours</h2><div class="feewrap"><table class="feetable hset"><tbody>${hours}</tbody></table></div></section>
     <section class="set"><h2 class="sub-h">Dentists</h2>${dens}</section>
-    <section class="set"><h2 class="sub-h">Treatments</h2><div class="feewrap"><table class="feetable"><thead><tr><th>Treatment</th><th>Duration</th><th>Mode</th><th>Lowest fee</th><th>Highest fee</th></tr></thead><tbody>${trs}</tbody></table></div></section>
+    <section class="set"><h2 class="sub-h">Treatments</h2><div class="feewrap"><table class="feetable tset"><thead><tr><th>Treatment</th><th>Duration</th><th>Mode</th><th>Lowest fee</th><th>Highest fee</th></tr></thead><tbody>${trs}</tbody></table></div></section>
     <section class="set"><h2 class="sub-h">Roles</h2>${roles}</section>
     <div class="savebar"><span class="fixed-line">${A.dirty ? 'You have unsaved changes.' : 'All changes saved.'}</span><button type="button" class="btn btn--yuzey btn--sm" data-discard ${A.dirty ? '' : 'disabled'}>Discard</button><button type="button" class="btn btn--kobalt btn--sm" data-save ${A.dirty ? '' : 'disabled'}>Save changes</button></div>`;
 }

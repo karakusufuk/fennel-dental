@@ -9,15 +9,15 @@ import { FEE_GROUPS, PRICES_UPDATED, eur } from '../../data/prices';
     <div class="stack stack--lg" data-reveal style="margin-top:40px">
       {FEE_GROUPS.map((g) => (
         <div class="feewrap">
-          <table class="feetable">
+          <table class="feetable" role="table">
             <caption>{g.title}</caption>
-            <thead><tr><th scope="col">Treatment</th><th scope="col" class="num">From</th><th scope="col" class="num">To</th></tr></thead>
-            <tbody>
+            <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Treatment</th><th scope="col" class="num" role="columnheader">From</th><th scope="col" class="num" role="columnheader">To</th></tr></thead>
+            <tbody role="rowgroup">
               {g.rows.map((r) => (
-                <tr data-slug={r.slug}>
-                  <th scope="row">{r.name}</th>
-                  <td class="num" data-min>{eur(r.p[0])}</td>
-                  <td class="num" data-max>{eur(r.p[1])}</td>
+                <tr data-slug={r.slug} role="row">
+                  <th scope="row" role="rowheader">{r.name}</th>
+                  <td class="num" data-min role="cell">{eur(r.p[0])}</td>
+                  <td class="num" data-max role="cell">{eur(r.p[1])}</td>
                 </tr>
               ))}
             </tbody>

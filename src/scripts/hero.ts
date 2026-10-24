@@ -7,7 +7,8 @@ export function initHero() {
   const back = $('.hero__back', hero ?? document);
   if (!hero || !front || !back) return;
 
-  const fine = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 761px)');
+  // ≤1100px'te hero katmansız (CSS); parallax yalnız masaüstünde
+  const fine = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1101px)');
   // Şiddet tek değişkenden: .hero { --parallax: 22 }  (0–50 px)
   const amount = () => parseFloat(getComputedStyle(hero).getPropertyValue('--parallax')) || 22;
 
