@@ -15,15 +15,23 @@ export function initGuided() {
   const call = $('[data-call]', sec)!;
   const results = $$('[data-result]', sec);
 
-  let branch = sec.dataset.defaultBranch || 'braces';
-  let ans = Number(sec.dataset.defaultAnswer ?? 1);
+  const prog = $('[data-gprog]', sec)!;
+  const progN = $('[data-gprog-n]', sec)!;
 
-  const cardKey = () => (branch === 'pain' && ans === 0 ? 'call' : branch);
+  // Yüklemede seçim yok: dal ve cevap yalnız kullanıcı dokununca seçilir
+  let branch = '';
+  let ans = -1;
+
+  const cardKey = () => (!branch || ans < 0 ? '' : branch === 'pain' && ans === 0 ? 'call' : branch);
 
   const paint = () => {
-    const d = data.find((x) => x.key === branch)!;
+    const d = data.find((x) => x.key === branch);
     branchBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.branch === branch)));
     qs.forEach((q) => { q.hidden = q.dataset.q !== branch; });
+    ansWrap.hidden = !d;
+    prog.style.width = d ? '50%' : '25%';
+    progN.textContent = d ? '2 / 4' : '1 / 4';
+    if (!d) return;
     ansWrap.setAttribute('aria-labelledby', `q-${branch}`);
     ansBtns.forEach((b, i) => {
       b.textContent = d.answers[i];
@@ -39,7 +47,7 @@ export function initGuided() {
   branchBtns.forEach((b) => b.addEventListener('click', () => {
     if (b.dataset.branch === branch) return;
     branch = b.dataset.branch!;
-    ans = 1; // dal değişince cevap ikinci seçeneğe döner
+    ans = -1; // dal değişince cevap seçimi sıfırlanır
     paint();
     fadeSwap(dyn, paintCard);
   }));

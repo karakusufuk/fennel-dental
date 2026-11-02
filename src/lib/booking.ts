@@ -56,11 +56,11 @@ export interface WaitEntry {
 
 export const CHAIRS = [1, 2, 3];
 export const KEYS = {
-  bookings: 'fennel-demo-bookings',
-  settings: 'fennel-demo-settings',
-  waitlist: 'fennel-demo-waitlist',
-  log: 'fennel-demo-log',
-  seeded: 'fennel-demo-seeded',
+  bookings: 'fennel-demo2-bookings',
+  settings: 'fennel-demo2-settings',
+  waitlist: 'fennel-demo2-waitlist',
+  log: 'fennel-demo2-log',
+  seeded: 'fennel-demo2-seeded',
 };
 
 /* ───────── Tedaviler ───────── */
@@ -86,9 +86,9 @@ export const DEFAULT_TREATMENTS: Settings['treatments'] = Object.fromEntries(
 );
 
 const DENTIST_TREATMENTS: Record<string, string[]> = {
-  'aoife-murphy': ['examination', 'check-up-and-clean', 'fillings', 'root-canal', 'emergency'],
+  'clodagh-kinsella': ['examination', 'check-up-and-clean', 'fillings', 'root-canal', 'emergency'],
   'conor-walsh': ['examination', 'braces-and-aligners'],
-  'siobhan-byrne': ['examination', 'check-up-and-clean', 'fillings', 'whitening', 'crowns-and-veneers'],
+  'blathnaid-byrne': ['examination', 'check-up-and-clean', 'fillings', 'whitening', 'crowns-and-veneers'],
   'daniel-oconnor': ['examination', 'root-canal', 'implants', 'crowns-and-veneers', 'emergency'],
 };
 
@@ -158,8 +158,8 @@ export function getSettings(): Settings {
   return st;
 }
 export function saveSettings(s: Settings) { save(KEYS.settings, s); logEvent('Settings saved'); }
-const FIRST = ['Niamh', 'Cian', 'Aoibhinn', 'Sean', 'Roisin', 'Eoin', 'Grainne', 'Darragh', 'Ciara', 'Padraig', 'Saoirse', 'Fionn', 'Maeve', 'Oisin', 'Aisling', 'Tadhg'];
-const LAST = ['Doyle', 'Kelly', 'Brennan', 'Quinn', 'Nolan', 'Gallagher', 'Burke', 'Daly', 'Kavanagh', 'Fitzgerald', 'Moran', 'Hickey'];
+const FIRST = ['Ailbhe', 'Cian', 'Aoibhinn', 'Sean', 'Roisin', 'Eoin', 'Sorcha', 'Cathal', 'Ciara', 'Padraig', 'Saoirse', 'Fionn', 'Nuala', 'Oisin', 'Aisling', 'Tadhg'];
+const LAST = ['Mulcahy', 'Kelly', 'Cusack', 'Quinn', 'Nolan', 'Gallagher', 'Burke', 'Daly', 'Kavanagh', 'Fitzgerald', 'Moran', 'Hickey'];
 
 function allRaw(): Booking[] { return load<Booking[]>(KEYS.bookings, () => []); }
 function saveBookings(b: Booking[]) { save(KEYS.bookings, b); }
@@ -471,7 +471,7 @@ function defaultWait(): WaitEntry[] {
     { id: 'w-1', name: 'Eimear Collins', phone: '+353 8X XXX XXXX', treatment: 'check-up-and-clean', pref: 'Mornings', createdAt: Date.now() - 86400000 * 3, status: 'waiting' },
     { id: 'w-2', name: 'Barry Lynch', phone: '+353 8X XXX XXXX', treatment: 'fillings', pref: 'Any weekday', createdAt: Date.now() - 86400000 * 2, status: 'waiting' },
     { id: 'w-3', name: 'Orla Mahony', phone: '+353 8X XXX XXXX', treatment: 'any', pref: 'Afternoons', createdAt: Date.now() - 86400000, status: 'waiting' },
-    { id: 'w-4', kind: 'note', name: 'Fiona Healy', phone: '+353 8X XXX XXXX', treatment: 'fillings', dentist: 'aoife-murphy', pref: '', note: 'Weekday mornings before 10 work best.\nI can come at short notice.', createdAt: Date.now() - 3600000 * 5, status: 'waiting' },
+    { id: 'w-4', kind: 'note', name: 'Fiona Healy', phone: '+353 8X XXX XXXX', treatment: 'fillings', dentist: 'clodagh-kinsella', pref: '', note: 'Weekday mornings before 10 work best.\nI can come at short notice.', createdAt: Date.now() - 3600000 * 5, status: 'waiting' },
   ];
 }
 export function getWaitlist(): WaitEntry[] { return load(KEYS.waitlist, defaultWait); }

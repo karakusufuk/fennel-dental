@@ -10,7 +10,7 @@ export function getStaticPaths() {
 const { d } = Astro.props;
 const theirs = [
   ...treatmentPages.filter((t) => t.dentists.includes(d.slug)).map((t) => ({ name: t.name, href: `/treatments/${t.slug}/` })),
-  ...(['daniel-oconnor', 'aoife-murphy'].includes(d.slug) ? [{ name: 'Emergency care', href: '/emergency/' }] : []),
+  ...(['daniel-oconnor', 'clodagh-kinsella'].includes(d.slug) ? [{ name: 'Emergency care', href: '/emergency/' }] : []),
 ];
 ---
 <Page title={d.name} description={`${d.name}, ${d.role}. ${d.bio}`}>

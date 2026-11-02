@@ -40,20 +40,47 @@ export function initTreatments() {
     }
   };
 
+  const tmore = $<HTMLAnchorElement>('[data-tmore]', sec)!;
+  const HDR = 60; // kaydırılmış header yüksekliği
+  const barH = () => $('[data-mbar]')?.offsetHeight ?? 0;
+
+  // Telefon: seçili satır (başlık + kısa metin + görsel) header ile alt çubuk arasına sığar.
+  // Görsel dışındaki yükseklik ölçülür; CSS görseli kalan alana göre küçültür (--trest).
+  const fit = () => {
+    if (!phone.matches) { sec.style.removeProperty('--trest'); return; }
+    const li = items[cur];
+    const body = $('.tdet__body', li)!;
+    const pad = parseFloat(getComputedStyle(li).paddingBottom) || 0;
+    const rest = btns[cur].offsetHeight + body.offsetHeight + panel.offsetHeight - stage.offsetHeight + pad;
+    sec.style.setProperty('--trest', `${Math.ceil(rest)}px`);
+  };
+
   const select = (i: number) => {
+    // Telefon: dokunulan başlık ekranda yerinde kalır. Üstte kapanan satır anında kapanır ve
+    // kayan yükseklik kaydırmayla dengelenir; böylece kullanıcı sayfada aşağı fırlamaz.
+    const anchor = phone.matches ? btns[i].getBoundingClientRect().top : null;
+    if (anchor !== null) items.forEach((li, k) => { if (k < i) li.classList.add('is-snap'); });
     cur = i;
     btns.forEach((b, k) => {
       const on = k === i;
       b.setAttribute('aria-pressed', String(on));
       b.setAttribute('aria-expanded', String(on));
       dets[k].classList.toggle('is-open', on);
+      items[k].classList.toggle('is-sel', on);
     });
     tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
     descs.forEach((d, k) => d.classList.toggle('is-on', k === i));
     pairs.forEach((p, k) => p.classList.toggle('is-on', k === i));
     prog.style.width = `${((i + 1) / total) * 100}%`;
     progN.textContent = `${i + 1} / ${total}`;
+    tmore.href = `/treatments/${items[i].dataset.slug}/`;
     place();
+    fit();
+    if (anchor !== null) {
+      const d = btns[i].getBoundingClientRect().top - anchor;
+      if (Math.abs(d) > 0.5) window.scrollBy(0, d);
+      requestAnimationFrame(() => requestAnimationFrame(() => items.forEach((li) => li.classList.remove('is-snap'))));
+    }
     reveal();
   };
 
@@ -64,9 +91,24 @@ export function initTreatments() {
     if (!narrow.matches) { play(); return; }
     await new Promise((r) => setTimeout(r, 340)); // satır açılma geçişi (300ms) bitsin
     if (my !== token) return;
+    if (phone.matches) {
+      fit(); // başlık büyüme geçişi bitti: iki satıra inen başlık (Braces…) artık doğru ölçülür
+      // Telefon: satırın tamamı header ile alt çubuk arasında görünsün; en az kaydırma, başlık hep ekranda
+      const r = items[cur].getBoundingClientRect();
+      const top = HDR + 12;
+      const bottom = innerHeight - barH() - 12;
+      let dy = r.bottom > bottom ? r.bottom - bottom : 0;
+      if (r.top - dy < top) dy = r.top - top;
+      if (Math.abs(dy) > 1) {
+        await scrollToY(scrollY + dy);
+        if (my !== token) return;
+      }
+      play();
+      return;
+    }
     const r = panel.getBoundingClientRect();
     const top = 60 + 12;
-    const bottom = innerHeight - (phone.matches ? 77 : 0) - 12;
+    const bottom = innerHeight - 12;
     if (r.top < top || r.bottom > bottom) {
       await scrollToY(r.top + scrollY - (60 + 16));
       if (my !== token) return;
@@ -88,7 +130,11 @@ export function initTreatments() {
   });
   $('[data-replay]', sec)!.addEventListener('click', play);
   narrow.addEventListener('change', () => { place(); play(); });
+  phone.addEventListener('change', fit);
+  addEventListener('resize', fit);
+  document.fonts?.ready.then(fit);
   place();
+  fit();
 
   // Görselleri bölüme yaklaşınca yükle (lazy → eager), geçişte boş kare olmasın
   if ('IntersectionObserver' in window) {
@@ -100,11 +146,12 @@ export function initTreatments() {
     near.observe(sec);
 
     // İlk görünüşte 01 geçişi bir kez kendiliğinden oynar
+    // (telefonda görselin çoğu header ile alt çubuk arasında görünür olunca)
     const seen = new IntersectionObserver((es) => {
       if (!es[0].isIntersecting) return;
       seen.disconnect();
       play();
-    }, { threshold: 0.35 });
+    }, phone.matches ? { threshold: 0.6, rootMargin: `-${HDR}px 0px -${barH()}px 0px` } : { threshold: 0.35 });
     seen.observe(panel);
   } else {
     play();

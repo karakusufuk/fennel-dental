@@ -5,6 +5,7 @@ import {
 } from '../lib/booking';
 import { team } from '../data/team';
 import { esc, q, qa } from './ui';
+import { initCombos } from './combo';
 
 type Role = 'reception' | 'dentist' | 'owner';
 type View = 'today' | 'week' | 'requests' | 'waiting' | 'settings' | 'activity';
@@ -12,6 +13,7 @@ interface Auth { role: Role; dentist?: string }
 
 const ROW = 24; // 15 dk = 24px
 const root = q('[data-admin]')!;
+initCombos(root); // yerel select açılır menüsü yerine sitenin kendi listesi
 const KEY = 'fennel-admin-role';
 const REASONS = ['No availability', 'Not suitable — please call us', 'Duplicate request'];
 
@@ -533,7 +535,7 @@ function route() {
   if (['today', 'week', 'requests', 'waiting', 'settings', 'activity'].includes(h)) { if (h !== A.view) { A.dirty = false; A.draft = null; } A.view = h; A.drawer = null; }
   render();
 }
-onChange(() => { if (!drag && !(document.activeElement as HTMLElement | null)?.matches('input,textarea,select')) render(); });
+onChange(() => { if (!drag && !(document.activeElement as HTMLElement | null)?.matches('input,textarea,select,.combo *')) render(); });
 setInterval(() => { if (A.auth && A.view === 'today' && A.date === today() && !drag) render(); }, 60000);
 void availabilitySync; void defaultSettings; void TREATMENT_ORDER;
 route();

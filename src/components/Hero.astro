@@ -2,12 +2,15 @@
 import Img from './Img.astro';
 ---
 <section class="hero" id="top" aria-label="Intro" data-hero>
-  <div class="hero__head wrap">
-    <h1>Know the plan before the chair.</h1>
-  </div>
-  <div class="hero__stage">
-    <Img base="hero/hero-arka" widths={[768, 1536]} sizes="100vw" width={1536} height={1024} class="hero__back" loading="eager" fetchpriority="high" ariaHidden />
-    <Img base="hero/hero-on" widths={[768, 1152, 1536]} sizes="(max-width: 760px) 100vw, 1140px" width={1536} height={1024} class="hero__front" alt="A dentist shows a seated patient his X-ray on a tablet" loading="eager" fetchpriority="high" />
+  <div class="hero__first">
+    <div class="hero__head wrap">
+      <h1>Know the plan before the chair.</h1>
+    </div>
+    <div class="hero__stage">
+      <Img base="hero/hero-arka" widths={[768, 1536]} sizes="100vw" width={1536} height={1024} class="hero__back" loading="eager" fetchpriority="high" ariaHidden />
+      <Img base="hero/hero-on" widths={[768, 1152, 1536]} sizes="(max-width: 760px) 100vw, 1140px" width={1536} height={1024} class="hero__front" alt="A dentist shows a seated patient his X-ray on a tablet" loading="eager" fetchpriority="high" />
+    </div>
+    <a class="btn btn--kobalt hero__go" href="/start/">Start in 60 seconds →</a>
   </div>
   <div class="hero__low">
     <div class="wrap">

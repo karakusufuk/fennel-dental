@@ -22,7 +22,7 @@ export const SAME_PRICE = 'Exact price comes as a written treatment plan after y
 export const treatmentPages: TreatmentPage[] = [
   {
     slug: 'check-up-and-clean', n: '01', name: 'Check-up and clean', intro: 'A full check of your teeth and gums, then a clean to remove tartar.',
-    length: '45 min', visits: '1', feels: 'Scraping, no pain', img: '01-temizlik', altBefore: 'Before: molar with tartar', altAfter: 'After: clean molar', branch: 'checkup', dentists: ['aoife-murphy', 'siobhan-byrne'],
+    length: '45 min', visits: '1', feels: 'Scraping, no pain', img: '01-temizlik', altBefore: 'Before: molar with tartar', altAfter: 'After: clean molar', branch: 'checkup', dentists: ['clodagh-kinsella', 'blathnaid-byrne'],
     steps: [
       { t: 'We ask how things are.', d: 'Any pain, bleeding or changes since your last visit.' },
       { t: 'We check every tooth and your gums.', d: 'X-rays only if they\'re due.' },
@@ -32,7 +32,7 @@ export const treatmentPages: TreatmentPage[] = [
   },
   {
     slug: 'fillings', n: '02', name: 'Fillings', intro: 'Decay is removed and the tooth is sealed with a tooth-coloured filling.',
-    length: '30–60 min', visits: '1', feels: 'Numb, then light pressure', img: '02-dolgu', altBefore: 'Before: molar with decay', altAfter: 'After: molar with a tooth-coloured filling', branch: 'pain', dentists: ['aoife-murphy', 'siobhan-byrne'],
+    length: '30–60 min', visits: '1', feels: 'Numb, then light pressure', img: '02-dolgu', altBefore: 'Before: molar with decay', altAfter: 'After: molar with a tooth-coloured filling', branch: 'pain', dentists: ['clodagh-kinsella', 'blathnaid-byrne'],
     steps: [
       { t: 'We numb the area.', d: 'A small injection; you\'ll feel pressure, not pain.' },
       { t: 'We remove the decay.', d: 'Only the damaged part of the tooth.' },
@@ -42,7 +42,7 @@ export const treatmentPages: TreatmentPage[] = [
   },
   {
     slug: 'root-canal', n: '03', name: 'Root canal', intro: 'The infected nerve is cleaned out and sealed, so you keep the tooth.',
-    length: '60–90 min', visits: '1–2', feels: 'Like a long filling', img: '03-kanal', altBefore: 'Before: cross-section with inflamed nerve', altAfter: 'After: cross-section after root canal', branch: 'pain', dentists: ['aoife-murphy', 'daniel-oconnor'],
+    length: '60–90 min', visits: '1–2', feels: 'Like a long filling', img: '03-kanal', altBefore: 'Before: cross-section with inflamed nerve', altAfter: 'After: cross-section after root canal', branch: 'pain', dentists: ['clodagh-kinsella', 'daniel-oconnor'],
     steps: [
       { t: 'X-ray and numbing.', d: 'We see the shape of the roots first.' },
       { t: 'We clean inside the tooth.', d: 'The infected nerve is removed and the canals are cleaned.' },
@@ -72,7 +72,7 @@ export const treatmentPages: TreatmentPage[] = [
   },
   {
     slug: 'whitening', n: '06', name: 'Whitening', intro: 'Your teeth lightened by a few shades, safely, under a dentist\'s care.',
-    length: '2–3 weeks', visits: '2', feels: 'Mild sensitivity for a few days', img: '01-temizlik', compare: true, branch: 'appearance', dentists: ['siobhan-byrne'],
+    length: '2–3 weeks', visits: '2', feels: 'Mild sensitivity for a few days', img: '01-temizlik', compare: true, branch: 'appearance', dentists: ['blathnaid-byrne'],
     steps: [
       { t: 'Check-up first.', d: 'Whitening is only done on healthy teeth and gums.' },
       { t: 'Trays made for you.', d: 'We scan your teeth and make thin custom trays.' },
@@ -82,7 +82,7 @@ export const treatmentPages: TreatmentPage[] = [
   },
   {
     slug: 'crowns-and-veneers', n: '07', name: 'Crowns and veneers', intro: 'A crown covers and protects a damaged tooth; a veneer changes how a front tooth looks.',
-    length: '2–3 weeks', visits: '2', feels: 'Numb, then nothing', branch: 'appearance', dentists: ['siobhan-byrne', 'daniel-oconnor'],
+    length: '2–3 weeks', visits: '2', feels: 'Numb, then nothing', branch: 'appearance', dentists: ['blathnaid-byrne', 'daniel-oconnor'],
     steps: [
       { t: 'Consultation.', d: 'We look at the tooth and agree what you want it to look like.' },
       { t: 'Preparation.', d: 'The tooth is shaped and scanned. You leave with a temporary.' },

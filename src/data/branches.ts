@@ -18,5 +18,3 @@ export const branches: Branch[] = [
   { key: 'checkup', slug: 'check-up-and-clean', label: 'Check-up', q: 'When was your last visit?', answers: ['Within a year', 'Over a year ago'], title: 'Check-up and clean', time: '45 min', rows: [['Check-up and clean', '€95–€140']], cta: 'Book now →' },
 ];
 
-export const defaultBranch = 'braces';
-export const defaultAnswer = 1;

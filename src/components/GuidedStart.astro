@@ -1,29 +1,29 @@
 ---
-import { branches, defaultBranch, defaultAnswer } from '../data/branches';
-const start = branches.find((b) => b.key === defaultBranch)!;
+import { branches } from '../data/branches';
 ---
-<section class="sec wrap" id="start" aria-label="Guided start" data-guided data-default-branch={defaultBranch} data-default-answer={defaultAnswer}>
+<!-- Yüklemede hiçbir şey seçili değil: soru ve cevaplar dal seçilince, sonuç kartı cevap seçilince açılır -->
+<section class="sec wrap" id="start" aria-label="Guided start" data-guided>
   <div class="guided" data-reveal>
     <div class="etiket">[ Guided start ]</div>
     <h2 class="h-bolum">What brings you in?</h2>
     <div class="opts" role="group" aria-label="Reason for visit">
       {branches.map((b) => (
-        <button type="button" class="opt" data-branch={b.key} aria-pressed={b.key === defaultBranch ? 'true' : 'false'}>{b.label}</button>
+        <button type="button" class="opt" data-branch={b.key} aria-pressed="false">{b.label}</button>
       ))}
     </div>
     <div class="prog">
-      <div class="prog__bar"><i style="width:50%"></i></div>
-      <span class="prog__n">2 / 4</span>
+      <div class="prog__bar"><i style="width:25%" data-gprog></i></div>
+      <span class="prog__n" data-gprog-n>1 / 4</span>
     </div>
 
     {branches.map((b) => (
-      <div class="gq" data-q={b.key} hidden={b.key !== defaultBranch}>
+      <div class="gq" data-q={b.key} hidden>
         <h3 id={`q-${b.key}`}>{b.q}</h3>
       </div>
     ))}
-    <div class="answers" role="group" aria-labelledby="q-braces" data-answers>
-      <button type="button" class="ans" data-ans="0" aria-pressed={defaultAnswer === 0 ? 'true' : 'false'}>{start.answers[0]}</button>
-      <button type="button" class="ans" data-ans="1" aria-pressed={defaultAnswer === 1 ? 'true' : 'false'}>{start.answers[1]}</button>
+    <div class="answers" role="group" data-answers hidden>
+      <button type="button" class="ans" data-ans="0" aria-pressed="false"></button>
+      <button type="button" class="ans" data-ans="1" aria-pressed="false"></button>
     </div>
 
     <div class="gdyn" data-dyn aria-live="polite">
@@ -33,7 +33,7 @@ const start = branches.find((b) => b.key === defaultBranch)!;
         <a class="btn btn--beyaz" style="align-self:flex-start" href="tel:+35312345018">Call 01 234 5018 →</a>
       </div>
       {branches.map((b) => (
-        <div class="gcard on-dark" data-result={b.key} hidden={b.key !== defaultBranch}>
+        <div class="gcard on-dark" data-result={b.key} hidden>
           <div class="gcard__top">
             <div class="gcard__t">{b.title}</div>
             <div class="gcard__time">{b.time}</div>

@@ -12,7 +12,7 @@ Paket belgelerinden ayrılan ya da belgenin boş bıraktığı yerlerde verilen 
 - **Önceki/Sonraki gezinmesi halka şeklinde** (01'in "Previous" linki 08 Emergency care'e, 07'nin "Next" linki 08'e gider); belge uçlar için bir şey demiyor.
 - **Tek görselli tedavi sahnelerinde ilerleme çubuğu yok** (`n / 5` yalnız ana sayfadaki 5'li seçici içindi); BEFORE/AFTER, 3 sn silme, Play again birebir.
 - **Whitening kaydırıcısında "önce" katmanının sepia filtresi görselin zemin rengini de sarartıyor** (panel zemini `--sahne`, görselin zemini filtreyle değişiyor). Belge filtreyi aynen verdiği için olduğu gibi bırakıldı. Alternatif: yalnız dişe maske uygulamak.
-- **Whitening, Crowns and veneers tedavi sahneleri/hekimler:** `05-tedavi-icerikleri.md` eşleşmesi aynen; Emergency care → Aoife Murphy ve Daniel O'Connor profilinde "Emergency care" linki.
+- **Whitening, Crowns and veneers tedavi sahneleri/hekimler:** `05-tedavi-icerikleri.md` eşleşmesi aynen; Emergency care → Clodagh Kinsella ve Daniel O'Connor profilinde "Emergency care" linki.
 - **Hekim profilinde "Next free slots"** randevu katmanından gecikmesiz okunur (`nextSlots`); liste `Examination` süresine göre.
 - **Hero preload'ları yalnız ana sayfada** (alt sayfalarda gereksiz yük olmasın diye `head` slot'una taşındı).
 - **Yasal sayfalar:** bölüm başlıkları ben seçtim (Who we are, What we collect …); gövde `[LEGAL TEXT — to be supplied by the clinic]`.

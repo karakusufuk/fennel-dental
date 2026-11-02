@@ -1,4 +1,4 @@
-import { listBookings, sendCode, verifyCode, cancelBooking, phoneOk, phoneHint, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
+import { listBookings, sendCode, verifyCode, phoneOk, phoneHint, maskPhone, dayLabel, TREATMENT_NAMES, onChange, type Booking } from '../lib/booking';
 import { team } from '../data/team';
 import { esc, q, field } from './ui';
 import { mountNote, noteState } from './waitnote';
@@ -19,7 +19,7 @@ function row(b: Booking) {
   const d = team.find((x) => x.slug === b.dentist);
   const label = gone ? 'CANCELLED' : b.status === 'requested' ? 'REQUESTED' : b.status === 'confirmed' ? 'CONFIRMED' : b.status.toUpperCase();
   const actions = gone ? '' : S.confirm === b.id
-    ? `<div class="rowact"><span>Cancel this appointment?</span><button type="button" class="btn btn--kobalt btn--sm" data-yes="${b.id}">Yes, cancel</button><button type="button" class="btn btn--yuzey btn--sm" data-keep>Keep it</button></div>`
+    ? `<div class="rowact"><span>Cancel this appointment?</span><button type="button" class="btn btn--kobalt btn--sm" disabled>Yes, cancel</button><button type="button" class="btn btn--yuzey btn--sm" data-keep>Keep it</button></div>`
     : `<div class="rowact"><a class="btn btn--yuzey btn--sm" href="/book/?reschedule=${b.id}">Reschedule</a><button type="button" class="btn btn--yuzey btn--sm" data-cancel="${b.id}">Cancel</button></div>`;
   return `<li class="apr${gone ? ' is-gone' : ''}"><div class="apr__main">
     <span class="mono apr__when">${esc(dayLabel(b.date))} ${b.time}</span>
@@ -44,8 +44,6 @@ function render(focus = false) {
   if (focus) q('#my-h', root)?.focus();
 }
 
-async function refresh() { S.list = await listBookings(S.phone); render(); }
-
 root.addEventListener('click', async (e) => {
   const t = e.target as HTMLElement;
   if (t.closest('[data-send]') || (t.closest('[data-resend]') && Date.now() >= S.resendAt)) {
@@ -61,8 +59,6 @@ root.addEventListener('click', async (e) => {
   const c = t.closest<HTMLElement>('[data-cancel]');
   if (c) { S.confirm = c.dataset.cancel!; render(); return; }
   if (t.closest('[data-keep]')) { S.confirm = ''; render(); return; }
-  const y = t.closest<HTMLElement>('[data-yes]');
-  if (y) { await cancelBooking(y.dataset.yes!); S.confirm = ''; await refresh(); return; }
 });
 root.addEventListener('submit', async (e) => {
   e.preventDefault();

@@ -37,7 +37,7 @@ const slugOf = (i: number) => treatmentPages[i].slug;
       </div>
       <ol class="tlist">
         {treatments.map((t, i) => (
-          <li data-t={i}>
+          <li data-t={i} data-slug={slugOf(i)} class={i === 0 ? 'is-sel' : undefined}>
             <button type="button" class="tbtn" aria-pressed={i === 0 ? 'true' : 'false'} aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`tdet-${i}`}>
               <span class="tnum">{t.n}</span>
               <span class="tname">{t.name}</span>
@@ -76,6 +76,7 @@ const slugOf = (i: number) => treatmentPages[i].slug;
           </div>
         ))}
       </div>
+      <a class="tmore" href={`/treatments/${slugOf(0)}/`} data-tmore>Details</a>
       <div class="panel__ctl">
         <button type="button" class="replay" data-replay>↻ Play again</button>
         <div class="prog">
